@@ -82,6 +82,22 @@ interface IDataCard {
 }
 ```
 
+**Интерфейс и типы для работы с событиями**
+```
+type EventName = string | RegExp;
+type Subscriber = Function;
+type EmitterEvent = {
+    eventName: string,
+    data: unknown
+};
+
+interface IEvents {
+    on<T extends object>(event: EventName, callback: (data: T) => void): void;
+    emit<T extends object>(event: string, data?: T): void;
+    trigger<T extends object>(event: string, context?: Partial<T>): (data: T) => void;
+}
+```
+
 **Данные карточки, которая находится в корзине**
 
 ```
@@ -171,6 +187,8 @@ type TApiPostMethods = 'POST' | 'PUT' | 'DELETE'
 - get()(endpoint: string) // Метод для отправки данных на сервер
 - post()(endpoint: string, data: any) // Метод для получения данных с сервера
 
+### Слой **Controller**
+
 ### Класс `EventEmitter`
 Предназначен для взаимодействия с событиями.
 - on()(event: string, listener: Function) // Установить обработчик на событие
@@ -178,6 +196,17 @@ type TApiPostMethods = 'POST' | 'PUT' | 'DELETE'
 - trigger()(callback: Function)  // Сделать коллбек триггер, генерирующий событие при вызове
 
 ### Слой данных **MODEL**
+
+#### Класс cardData
+Этот класс представляет модель товара, содержащую данные товара.
+
+**Поля:**
+- **`id: string`** — уникальный идентификатор товара.
+- **`name: string`** — название товара.
+- **`description: string`** — описание товара.
+- **`price: number`** — цена товара.
+- **`imageUrl: string`** — ссылка на изображение товара.
+
 
 #### Класс AuctionAPI
 Класс отвечает за взаимодействие с сервером. Конструктор класса наследует экземпляр класса Api
@@ -208,9 +237,35 @@ email Телефон
 
 
 
-### Классы представления **VIEW**
+### Слой представления данных **VIEW**
 
+#### Класс Card
+Отвечает за отображение карточки, задавая в карточке данные названия, изображения, описания,
+раздел. Класс используется для отображения карточек на странице сайта. 
+В конструктор класса передается DOM элемент темплейта, что позволяет при необходимости формировать 
+карточки разных вариантов верстки. В классе устанавливаются слушатели на все интерактивные элементы, 
+в результате взаимодействия с которыми пользователя генерируются соответствующие события.\
+Поля класса содержат элементы разметки элементов карточки. Конструктор, кроме темплейта принимает 
+экземпляр `EventEmitter` для инициации событий.
 
+**Поля**
+ itemElement: HTMLElement; - элемент разметки
+  events: IEvents; - экземпляр `EventEmitter` для инициации событий
+  title: HTMLElement; - заголовок
+  cardId: string; - id карточки
+  image?: HTMLImageElement; - изображение в карточке
+  price: HTMLElement; - цена
+  category?: HTMLElement; - категория
+  button?: HTMLButtonElement; 
+  // deleteBtn?: HTMLElement;
+  // description?: HTMLElement;
+
+**Методы:**
+- setData(cardData: ICard): void - заполняет атрибуты элементов карточки данными
+
+- deleteCard(): void - метод для удаления разметки карточки
+- render(): HTMLElement - метод возвращает полностью заполненную карточку с установленными слушателями
+- геттер id возвращает уникальный id карточки
 
 
 

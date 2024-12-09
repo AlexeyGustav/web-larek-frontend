@@ -2,9 +2,16 @@ import './scss/styles.scss';
 
 
 import { ApiListResponse, ApiPostMethods, Api } from "./components/base/api";
+import { EventEmitter, IEvents } from "./components/base/events";
 import { API_URL, CDN_URL } from "./utils/constants";
 import { AuctionAPI } from "./components/model/ActionApi";
-import {cloneTemplate, createElement, ensureElement} from "./utils/utils";
+import { Card } from "./components/view/Card";
+import { cloneTemplate, createElement, ensureElement } from "./utils/utils";
+import { ICard } from "./types/index";
+
+
+
+import { cardsData } from "./tempMokData";
 
 // const api = new Api(API_URL)
 const api = new AuctionAPI(CDN_URL, API_URL)
@@ -13,7 +20,9 @@ const api = new AuctionAPI(CDN_URL, API_URL)
 // console.log('api: ', apiData);
 // apiData.then((data: unknown) => {console.log(data)})
 
-// Отрисока
+const events: IEvents = new EventEmitter();
+
+// Отрисовка
 const container = document.querySelector(".gallery")
 
 
@@ -25,6 +34,9 @@ const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
 const orderTemplate = ensureElement<HTMLTemplateElement>('#order');
 const successTemplate = ensureElement<HTMLTemplateElement>('#success');
 
+// events.onAll((event) => {
+//   console.log(event.eventName, event.data);
+// })
 
 // Получаем лоты с сервера
 api.getLotList()
@@ -34,24 +46,9 @@ api.getLotList()
 });
 
 
-class Card {
-  protected itemElement: HTMLElement;
-  // protected _description?: HTMLElement;
-  // protected _title: HTMLElement;
-  // protected  _id: HTMLElement;
-  // protected _image?: HTMLImageElement;
-  // protected _button?: HTMLButtonElement;
 
-  constructor(template: HTMLTemplateElement) {
-    this.itemElement = template.content.firstElementChild.cloneNode(true) as HTMLElement;
 
-  }
+const card = new Card(cardCatalogTemplate, events)
+card.setData(cardsData[2])
 
-  render() {
-    return this.itemElement
-  }
-}
-
-const item = new Card(cardCatalogTemplate);
-const renderItem = item.render()
-container.append(renderItem)
+container.append(card.render())

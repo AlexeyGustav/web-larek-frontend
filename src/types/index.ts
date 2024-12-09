@@ -11,7 +11,7 @@ export type LotStatus = 'wait' | 'active' | 'closed';
 // export type ILot = ILotItem & IAuction;
 
 export interface ICard {
-  _id: string;
+  id: string;
   title: string;
   price: number | null;
   description?: string;
