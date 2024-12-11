@@ -1,3 +1,5 @@
+import { IEvents } from "../components/base/events"
+
 export type LotStatus = 'wait' | 'active' | 'closed';
 
 // export interface IAuction {
@@ -20,9 +22,9 @@ export interface ICard {
 }
 
 export interface IDataCard {
-  items: ICard[];
-  previewCard: ICard;
-  selectСard(item: ICard): void;
+  cards: ICard[];
+  preview: string | null;
+  selectСard?(item: ICard): void;
 }
 
 // export type TCard = Pick<ICard, "id" | "price">
@@ -64,4 +66,9 @@ export interface IForm {
 
 export interface IOrder extends IForm {
   error: string;
+}
+
+export interface IPage {
+  gallery: HTMLElement[];
+  counterBasket: number;
 }
