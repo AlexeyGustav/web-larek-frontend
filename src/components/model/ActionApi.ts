@@ -27,7 +27,7 @@ export class AuctionAPI extends Api implements IAuctionAPI{
   // }
 
   
-  getLotList(): Promise<ICard[]> {
+  getListCards(): Promise<ICard[]> {
     return this.get('/product/').then((data: ApiListResponse<ICard>) =>
         data.items.map((item) => ({
             ...item,

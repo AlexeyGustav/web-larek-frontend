@@ -2,15 +2,9 @@ import { IEvents } from "../components/base/events"
 
 export type LotStatus = 'wait' | 'active' | 'closed';
 
-// export interface IAuction {
-//   status: LotStatus;
-//   datetime: string;
-//   price: number;
-//   minPrice: number;
-//   history?: number[];
-// }
-
-// export type ILot = ILotItem & IAuction;
+export interface IModal {
+  modalContent: HTMLElement;
+}
 
 export interface ICard {
   id: string;

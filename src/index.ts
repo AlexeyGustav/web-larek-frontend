@@ -9,6 +9,7 @@ import { Component, Card } from "./components/view/Card";
 import { Page } from './components/view/Page';
 import { cloneTemplate, createElement, ensureElement } from "./utils/utils";
 import { ICard, IDataCard } from "./types/index";
+import { Modal } from "./components/view/Modal";
 
 
 
@@ -39,71 +40,37 @@ const templateContacts = ensureElement<HTMLTemplateElement>('#contacts')
 const successTemplate = ensureElement<HTMLTemplateElement>('#success');
 
 // Экземпляры классов
-const page = new Page(pageContainer, events)
-
-
-
-
-
-// показать карточку товара на странице
-
-// const card = new Card(cardCatalogTemplate, events)
-// console.log('card: ', card);
-
-// card.setData(cardsData[2])
-// container.append(card.render())
-
-// // показать карточку товара на странице
-// const itemTemplate = document.querySelector("#card-catalog") as HTMLTemplateElement
-
-// const card1 = new Card(cloneTemplate(itemTemplate), events)
-// console.log('card1: ', card1);
-//  // изменяет текст
-// card1.name = `100000000`
-// // частично меняем поля
-// const obj1 = {
-//   title: "+7 к мане",
-//   price: 5,
-//   description: "описание +10 к мане за респект",
-// }
-// container.append(card1.render(obj1))
-
-
-
-// проверка экземпляра класса Card
-
-// const cardItems = new CardsData(events) 
-// cardItems.cards = cardsData;
-// console.log('list2', cardItems.getCard("854cef69-976d-4c2a-a18c-2aa45046c390"));
-// cardItems.deleteCard("854cef69-976d-4c2a-a18c-2aa45046c390");
-// console.log("deleteCard", cardItems);
-// const getCards = cardItems.cards
-// console.log('getCards: ', getCards);
-// set
-// cardItems.preview = "854cef69-976d-4c2a-a18c-2aa45046c390";
-// get
-// console.log('previewCard: ', cardItems.preview);
-
+const page = new Page(pageContainer, events);
+const modal = new Modal(modalContainer, events);
 
 const cardItems = new CardsData(events) 
 
 
 // Получаем карточки с сервера
-api.getLotList()
-  .then((data) => {
-    cardItems.cards = data;
-
-    page.render({
-      gallery: cardItems.cards.map(item => {
-        const card = new Card(cardCatalogTemplate, events);
-        return card.render({
-            ...item
-        })
-    })
-    })
-  })
-  .catch(err => {
-    console.error(err);
+events.onAll((event) => {
+  console.log(event.eventName, event.data);
 });
 
+// Получаем карточки с сервера и загружаем в галерею
+api.getListCards()
+  .then((items) => {
+      cardData.cards = items
 
+      page.render({
+          gallery: cardData.cards.map(item => {
+              const card = new Card(cardCatalogTemplate, events);
+              return card.render({
+                  ...item
+              })
+          })
+      })
+  }).catch(console.error)
+
+// Фиксация модального окна
+events.on('modal:open', () => {
+  page.blockPageScroll(true)
+})
+
+events.on('modal:close', () => {
+  page.blockPageScroll(false)
+})
