@@ -1,40 +1,21 @@
-import { Api, ApiListResponse } from '../base/api';
-import { ICard } from '../../types/index';
+import { ICard, ApiListResponse, ICoursesApi, TDataOrder, TBingo } from "../../types/index";
 
-export interface IAuctionAPI {
-  cdn: string;
-  getLotList: () => Promise<ICard[]>;
-  // getLotItem: (id: string) => Promise<ILotItem>;
-  // getLotUpdate: (id: string) => Promise<LotUpdate>;
-  // placeBid(id: string, bid: IBid): Promise<LotUpdate>;
-  // orderLots: (order: IOrder) => Promise<IOrderResult>;
+export class CoursesApi {
+    protected baseUrl: ICoursesApi;
+
+    constructor(baseApi: ICoursesApi) {
+        this.baseUrl = baseApi;
+    }
+
+
+    // Массив карточек с сервера
+    getListCards(): Promise<ICard[]> {
+        return this.baseUrl.get(`/product/`)
+            .then((data: ApiListResponse) =>
+                data.items.map(item => ({
+                    ...item
+                })));
+    }
+    
+
 }
-
-export class AuctionAPI extends Api implements IAuctionAPI{
-  readonly cdn;
-
-  constructor(cdn: string, baseUrl: string, options?: RequestInit) {
-      super(baseUrl, options);
-      this.cdn = cdn;
-  }
-
-  // getLotList(): Promise<Idata> {
-  //   return this.get('/product').then((data: apiData) => {
-  //     console.log(data)
-  //     return data;
-
-  //   });
-  // }
-
-  
-  getListCards(): Promise<ICard[]> {
-    return this.get('/product/').then((data: ApiListResponse<ICard>) =>
-        data.items.map((item) => ({
-            ...item,
-            image: this.cdn + item.image
-        }))
-    );
-  }
-}
-
-

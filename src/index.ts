@@ -15,12 +15,7 @@ import { Modal } from "./components/view/Modal";
 
 import { cardsData } from "./tempMokData";
 
-const api = new AuctionAPI(CDN_URL, API_URL)
 
-// const api = new Api(API_URL)
-// const apiData = api.get('/product/')
-// console.log('api: ', apiData);
-// apiData.then((data: unknown) => {console.log(data)})
 
 // брокер событий
 const events: IEvents = new EventEmitter();
@@ -40,6 +35,7 @@ const templateContacts = ensureElement<HTMLTemplateElement>('#contacts')
 const successTemplate = ensureElement<HTMLTemplateElement>('#success');
 
 // Экземпляры классов
+const api = new CoursesApi(baseApi);
 const page = new Page(pageContainer, events);
 const modal = new Modal(modalContainer, events);
 
