@@ -59,8 +59,17 @@ yarn build
 
 ## Данные и типы, в проекте:
 
-**Карточка товара**
+**Интерфейс данных заказа**
+```
+interface IOrderData {
+    getOrder(): IInfoOrder;
+    setField(field: keyof IInfoOrder, value: string): void;
+    setErrors(): TErrorOrder;
+    clear(): void;
+}
+```
 
+**Карточка товара**
 ```
 interface ICard {
   id: string;
@@ -74,7 +83,6 @@ interface ICard {
 ```
 
 **Интерфейс главной страницы**
-
 ```
 interface IPage {
     gallery: HTMLElement[];
@@ -83,19 +91,21 @@ interface IPage {
 ```
 
 **Методы сервера**
-
 ```
 type ApiMethods = 'POST' | 'PUT' | 'DELETE'
 ```
 
 **Метод передачи данных заказа на сервер**
-
 ```
 type TDataOrder = Partial<IInfoOrder & IBasketData>
 ```
 
-**Заказ завершён**
+**Тип данных ошибок в форме**
+```
+TErrorOrder = Partial<Pick<IInfoOrder, 'address' | 'email' | 'payment' | 'phone'>>
+```
 
+**Заказ завершён**
 ```
 type TBingo = Pick<IInfoOrder, 'total'>
 
@@ -106,7 +116,6 @@ type ApiListResponse = {
 ```
 
 **Модальное окно**
-
 ```
 interface IModal {
     modalContent: HTMLElement;
@@ -121,8 +130,8 @@ interface ICoursesApi {
   post<T>(uri: string, data: object, method?: ApiMethods):Promise<T>;
 }
 ```
-**Интерфейсы формы**
 
+**Интерфейсы формы**
 ```
 interface IForm extends IInfoOrder {
     error: string;
@@ -138,7 +147,6 @@ interface IInfoOrder {
 ```
 
 **Модель данных корзины**
-
 ```
 interface IBasket {
     items: HTMLElement[];
@@ -161,7 +169,6 @@ interface IBasketData {
 ```
 
 **Карточка заказа**
-
 ```
 interface IInfoOrder {                 
     payment: string;                     
@@ -179,7 +186,6 @@ interface IInfoOrder {
 
 
 ### Класс `Api`
-
 Предназначен для работы с сервером. Имеет функции получения и отправки данных на сервер.
 - readonly baseUrl: string // Содержит ссылку на сервер
 - protected options: RequestInit // Объект конфигурации запросов, параметры - метод, тело запроса и заголовки.
@@ -197,7 +203,6 @@ interface IInfoOrder {
 ### Слой данных **MODEL**
 
 #### Класс CardData
-
 Хранит в себе карточки товара и отвечает за работу с ними
 
 **Поля**
@@ -211,7 +216,6 @@ interface IInfoOrder {
 - геттеры и сеттеры для сохранения и получения данных их полей класса.
 
 #### Класс BasketData
-
 Содержит в себе данные о товарах в корзине
 
 **Поля**
@@ -227,7 +231,20 @@ interface IInfoOrder {
 - clear(): void - очищает корзину
 - getBasketLength():number - Возвращает длину массива заказа
 
+#### Класс OrderData
+Работает с данными заказа. Отвечает за их хранение
 
+**Поля**
+- _payment: string - способ оплаты
+- _email: string - почта покупателя
+- _address: string - адрес доставки
+- _phone: string - телефон
+
+**Методы**
+- getOrder(): IInfoOrder - возвращает данные заказа
+- setField(field: keyof IInfoOrder, value: string): void - задать значения полям формы
+- setErrors(): TErrorOrder - массив с ошибками
+- clear(): void - очистка полей заказа
 
 
 
@@ -264,21 +281,32 @@ interface IInfoOrder {
 - геттер id возвращает уникальный id карточки
 
 #### Класс Modal
-
 Класс, который реализует модальное окно. Предоставляет такие методы: `openModal` и `closeModal` для отображения модального окна. Устанавливает слушатели на клавиатуру, для закрытия модального окна по Esc, на клик в оверлей и кнопку-крестик для закрытия попапа. \
 Метод `render(): HTMLElement` возвращает заполненную карточку со слушателями
-
-`constructor(protected container: HTMLElement, protected events: IEvents)`- в параметры принимает контейнер и экземпляр `EventEmitter` для инициации событий
 
 **Поля**
 - modalContent: HTMLElement - элемент модального окна
 
 **Методы:**
-- `closeEscape = (evt: KeyboardEvent)` - метод закрытия окна по нажатию клавиши Escape
-- `toggleModal(state: boolean)` - метод переключения класса модального окна
+- closeEscape = (evt: KeyboardEvent) - метод закрытия окна по нажатию клавиши Escape
+- toggleModal(state: boolean) - метод переключения класса модального окна
+
+#### Класс Form
+Класс отвечает за форму в модальном окне
+На все интерактивные элементы устанавливает слушатели. Когда пользователь взаимодействует с ними, генерируются события.
+
+**Поля**
+errorText текст ошибки
+submitBtn кнопка отправления
+
+**Методы**
+- сеттеры для сохранения данных в поля класса
+- showInputError(errorMessage: string): void - показывает ошибку
+- hideInputError(): void - скрывает ошибку
+- valid: boolean - смена блокировки кнопки
+- error: string - отображение ошибки
 
 #### Класс Basket
-
 Отображает товары в корзине. Класс применяется для отображения выбранных для заказа товаров и их общей суммы. В классе устанавливаются слушатели на все интерактивные элементы, в результате взаимодействия с которыми пользователя генерируются соответствующие события.
 
 **Поля**
@@ -293,29 +321,19 @@ interface IInfoOrder {
 
 
 
-
 ### Слой коммуникации
 
 #### Класс Component
-
 Абстрактный класс, отвечает за создания DOM-элементов.
 
-`constructor(protected readonly container: HTMLElement)`- в параметрах принимает конструктор, куда будет вставляться DOM-элемент.
-
 **Методы:**
- - `toggleClass` - переключает класс.
-
- - `setDisabled` - меняет статус блокировки.
-
- - `setText` - устанавливает текстовое содержимое элементу.
-
- - `setVisible` - показывает элемент.
-
- - `setHidden` - скрывает элемент.
-
- - `setImage` - устанавливает изображение с алтернативным текстом
-
- - `render` - вставляет корневой DOM-элемент в разметку.     
+ - toggleClass - переключает класс.
+ - setDisabled - меняет статус блокировки.
+ - setText - устанавливает текстовое содержимое элементу.
+ - setVisible - показывает элемент.
+ - setHidden - скрывает элемент.
+ - setImage - устанавливает изображение с алтернативным текстом
+ - render - вставляет корневой DOM-элемент в разметку.     
 
 ## Взаимодействие компонентов
 Код, описывающий взаимодействие представления и данных между собой находится в файле `index.ts`, выполняющем роль презентера.\

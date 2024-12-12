@@ -4,6 +4,8 @@ export type TDataOrder = Partial<IInfoOrder & IBasketData>;
 
 export type TBingo = Pick<IBasket, 'total'>;
 
+export type TErrorOrder = Partial<Pick<IInfoOrder, 'address' | 'email' | 'payment' | 'phone'>>;
+
 export type ApiListResponse = {
   items: ICard[];
   total: number;
@@ -78,3 +80,17 @@ export interface IBasketData {
 }
 
 export type TBasket = Pick<ICard & {index: number}, 'index'|'id'|'price'|'title'>;
+
+export interface ICardData {
+  cards: ICard[];
+  getCard(cardId:string): ICard;
+  getSelected(): void;
+  setSelected(cardId:string): void;
+}
+
+export interface IOrderData {
+  getOrder(): IInfoOrder;
+  setErrors(): TErrorOrder;
+  setField(field: keyof IInfoOrder, value: string): void;
+  clear(): void;
+}
