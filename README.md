@@ -63,104 +63,45 @@ yarn build
 
 ```
 interface ICard {
-  _id: string;
+  id: string;
   title: string;
   price: number | null;
   description?: string;
   image: string;
   category: string;
+  index?: number;
 }
 ```
 
-**Интерфейс модели работающей с массивом карточек товаров**
+**Интерфейс главной страницы**
 
 ```
-interface IDataCard {
-  cards: ICard[];
-  previewCard: ICard;
-  selectСard(item: ICard): void;
+interface IPage {
+    gallery: HTMLElement[];
+    counterBasket: number;
 }
 ```
 
-**Интерфейс и типы для работы с событиями**
-```
-type EventName = string | RegExp;
-type Subscriber = Function;
-type EmitterEvent = {
-    eventName: string,
-    data: unknown
-};
-
-interface IEvents {
-    on<T extends object>(event: EventName, callback: (data: T) => void): void;
-    emit<T extends object>(event: string, data?: T): void;
-    trigger<T extends object>(event: string, context?: Partial<T>): (data: T) => void;
-}
-```
-
-**Данные карточки, которая находится в корзине**
+**Методы сервера**
 
 ```
-export type TCard = Pick<ICard, "id" | "price";
+type ApiMethods = 'POST' | 'PUT' | 'DELETE'
 ```
 
-
-**Интерфейс для работы с корзиной**
-
-```
-interface IBasket {
-  productsList: ICard[];
-  payment: string;
-  getSumProductsList: () => number;
-  setToSelectСard(data: ICard): void;
-  getToCounterCards: () => number;
-  delToSelectСard(item: ICard): void;
-  clearBasket(): void
-}
-```
-
-**Интерфейс для работы с заказом из корзины**
+**Метод передачи данных заказа на сервер**
 
 ```
-interface IBasketOrdered {
-  items: string[];
-  email: string;
-  payment: string;
-  address: string;
-  phone: string;
+type TDataOrder = Partial<IInfoOrder & IBasketData>
+```
+
+**Заказ завершён**
+
+```
+type TBingo = Pick<IInfoOrder, 'total'>
+
+type ApiListResponse = {
+  items: ICard[];
   total: number;
-}
-```
-
-**Результат заказа из корзины**
-
-```
-interface IOrder {
-  _id: string;
-  total: number;
-}
-```
-
-**Ошибки**
-
-```
-interface IOrder extends IForm {
-    error: string;
-}
-```
-
-**Интерфейс модели работы с формами**
-
-```
-interface IForm {
-    address: string;
-    telephone: string;
-    email: string | RegExp;
-    payment: string;
-    total: number;
-    items: string[];
-    toCheckValidateBasket(): boolean;
-    toCheckValidateUser(): boolean;
 }
 ```
 
@@ -172,6 +113,64 @@ interface IModal {
 }
 ```
 
+**Интерфейс данных сервера**
+```
+interface ICoursesApi {
+  baseUrl: string;
+  get<T>(uri: string): Promise<T>;
+  post<T>(uri: string, data: object, method?: ApiMethods):Promise<T>;
+}
+```
+**Интерфейсы формы**
+
+```
+interface IForm extends IInfoOrder {
+    error: string;
+    valid: boolean;
+}
+
+interface IInfoOrder {                 
+  payment: string;                     
+  address: string;
+  phone: string;
+  email: string;                        
+}
+```
+
+**Модель данных корзины**
+
+```
+interface IBasket {
+    items: HTMLElement[];
+    total: number;
+}
+```
+
+```
+interface IBasketData {
+    getTotal(): number;
+    cardsBasket: ICard[];
+    add(card: ICard): void;
+    getIdBasketList(): string[];
+    contains(id: string): boolean;
+    remove(id: string): void;
+    getBasketLength():number;
+    getBasketList(): void;
+    clear(): void;
+}
+```
+
+**Карточка заказа**
+
+```
+interface IInfoOrder {                 
+    payment: string;                     
+    email: string;                        
+    phone: string;
+    address: string;
+}
+```
+
 ## Описание классов
 Код приложения разделен на слои согласно парадигме MVP: 
 - слой представления, отвечает за отображение на странице, 
@@ -180,11 +179,6 @@ interface IModal {
 
 
 ### Класс `Api`
-
-**Тип**
-```
-type TApiPostMethods = 'POST' | 'PUT' | 'DELETE'
-```
 
 Предназначен для работы с сервером. Имеет функции получения и отправки данных на сервер.
 - readonly baseUrl: string // Содержит ссылку на сервер
@@ -198,46 +192,40 @@ type TApiPostMethods = 'POST' | 'PUT' | 'DELETE'
 - on()(event: string, listener: Function) // Установить обработчик на событие
 - emit()(event: string, listener: Function) // Инициировать событие с данными
 - trigger()(callback: Function)  // Сделать коллбек триггер, генерирующий событие при вызове
+ - onAll() установить слушатель на все события.  
 
 ### Слой данных **MODEL**
 
+#### Класс CardData
 
-**Поля:**
+Хранит в себе карточки товара и отвечает за работу с ними
 
-#### Класс CardsData
-Этот класс представляет модель товара, содержащую основную информацию о продукте, которую можно отображать на страницах.
-В полях класса хранятся следующие данные:
-- cards: ICard[] - массив объектов карточек
-- preview: string | null - id карточки, выбранной для просмотра в модальной окне
-- events: IEvents - экземпляр класса `EventEmitter` для инициации событий при изменении данных.
-
-Так же класс предоставляет набор методов для взаимодействия с этими данными.
-**Методы**
-- getCard - получить список карточек
-- deleteCard - удалить карточку из списка
-
-#### Класс AuctionAPI
-Класс отвечает за взаимодействие с сервером. Конструктор класса наследует экземпляр класса Api
-**Методы**
-- getLotList - массив данных карточек
-
-#### Класс dataBasket
-Класс данных в корзине
 **Поля**
-НАзвание товара
-Стоимость товара
-Сумма заказа
+- _cards: ICard[] - массив карточек
+- _selectCardId: string | null - id выбранной карточки, для просмотра в модальном окне
 
 **Методы**
-Удаление товара
-Оформление товара
+- setSelected(cardId: string): void - передаёт карточку по её id
+- getCard(cardId:string): ICard - возвращает карточку по id.
+- getSelected(): ICard - возвращает карточку, которую выбрали
+- геттеры и сеттеры для сохранения и получения данных их полей класса.
 
-#### Класс OrderDetails
-Класс данных заказа
+#### Класс BasketData
+
+Содержит в себе данные о товарах в корзине
+
 **Поля**
-Спопсоб оплаты
-Адрес доставки
-email Телефон    
+- cardsBasket: ICard[] - массив объектов товаров, выбранных для оформленния заказа
+
+**Методы**
+- getIdBasketList(): string[] - возвращает id товаров для передачи данных на сервер
+- getTotal(): number - возвращает общую сумму корзины
+- remove(id: string): void - удаляет товар из корзины
+- add(card: ICard): void - добавляет товар в корзину
+- getBasketList(): void - нумерует товары и возвращает список в корзине.
+- contains - проверяет на наличие товара в корзине
+- clear(): void - очищает корзину
+- getBasketLength():number - Возвращает длину массива заказа
 
 
 
@@ -289,7 +277,18 @@ email Телефон
 - `closeEscape = (evt: KeyboardEvent)` - метод закрытия окна по нажатию клавиши Escape
 - `toggleModal(state: boolean)` - метод переключения класса модального окна
 
+#### Класс Basket
 
+Отображает товары в корзине. Класс применяется для отображения выбранных для заказа товаров и их общей суммы. В классе устанавливаются слушатели на все интерактивные элементы, в результате взаимодействия с которыми пользователя генерируются соответствующие события.
+
+**Поля**
+- items: HTMLElement[] - массив выбранных карточек
+- total: number - общая сумма заказа
+
+**Методы**
+- сеттеры для сохранения данных в поля класса
+- toggleButton(state: boolean) - переключение класса у кнопки
+- render(): HTMLElement - возвращает заполненную карточку с установленными слушателями
 
 
 
