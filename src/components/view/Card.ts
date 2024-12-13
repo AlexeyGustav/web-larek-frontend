@@ -1,6 +1,7 @@
-import { EventEmitter, IEvents } from "../../components/base/events";
-import { cloneTemplate, createElement, ensureElement } from "../../utils/utils";
+import { IEvents } from "../../components/base/events";
+import { cloneTemplate, ensureElement } from "../../utils/utils";
 import { ICard } from "../../types/index";
+import { CDN_URL } from "../../utils/constants";
 
 /**
  * Базовый компонент
@@ -60,190 +61,120 @@ export abstract class Component<T> {
 }
 
 
-// export class Card {
-//   protected itemElement: HTMLElement;
-//   protected events: IEvents;
-//   // protected description?: HTMLElement;
-//   protected title: HTMLElement;
-//   protected cardId: string;
-//   protected image?: HTMLImageElement;
-//   protected button?: HTMLButtonElement;
-//   protected price: HTMLElement;
-//   protected category?: HTMLElement;
-//   // protected deleteBtn?: HTMLElement;
-
-//   constructor(template: HTMLTemplateElement, events: IEvents) {
-//     this.events = events;
-//     this.itemElement = cloneTemplate(template);
-
-//     // this.description = this.itemElement.querySelector(".card__text");
-//     this.title = this.itemElement.querySelector(".card__title");
-//     this.image = this.itemElement.querySelector(".card__image");
-//     this.price = this.itemElement.querySelector(".card__price");
-//     this.category = this.itemElement.querySelector(".card__category");
-//     // this.button = this.itemElement.baseElement.querySelector(".gallery__item");
-//     // this.deleteBtn = this.itemElement.querySelector(".basket__item-delete");
-
-//     // this.button.addEventListener("click", () => {
-//     //   this.events.emit("card:select", { card: this })
-//     // });
-
-//     // this.deleteBtn.addEventListener("click", () => {
-//     //   this.events.emit("card:delete", { card: this })
-//     // });
-
-//   }
-
-//   setData(cardData: ICard) {
-// 		this.cardId = cardData.id;
-	
-// 		this.title.textContent = cardData.title;
-// 		this.price.textContent = `${String(cardData.price) + " синапсов"}`;
-// 		// this.description.textContent = cardData.description; 
-// 		this.image.src = cardData.image;
-// 		this.category.textContent = cardData.category;
-//     // кнопка
-
-//     if(cardData.price === null) {
-//       this.price.textContent = "Бесценно"
-//     }
-// 	}
-
-//   get id() {
-//     return this.cardId
-//   }
-
-//   deleteCard() {
-//     this.itemElement.remove();
-//     this.itemElement = null;
-//   }
-
-//   render() {
-//     return this.itemElement
-//   }
-// }
-interface ICardActions {
-  onClick: (event: MouseEvent) => void;
-}
-
-// export class Card {
-//   protected itemElement: HTMLElement;
-//   protected events: IEvents;
-//   protected description?: HTMLElement;
-//   protected title: HTMLElement;
-//   protected cardId: string;
-//   protected image?: HTMLImageElement;
-//   protected button?: HTMLButtonElement;
-//   protected price: HTMLElement;
-//   protected category?: HTMLElement;
-//   // protected deleteBtn?: HTMLElement;
-
-//   constructor(template: HTMLTemplateElement, events: IEvents, actions?: ICardActions) {
-//     this.events = events;
-//     this.itemElement = cloneTemplate(template);
-
-//     // this.description = this.itemElement.querySelector(".card__text");
-//     this.title = this.itemElement.querySelector(".card__title");
-//     this.image = this.itemElement.querySelector(".card__image");
-//     this.price = this.itemElement.querySelector(".card__price");
-//     this.category = this.itemElement.querySelector(".card__category");
-//     this.button = this.itemElement.querySelector(".gallery__item");
-//     console.log(' this.button: ',  this.button);
-//     // this.deleteBtn = this.itemElement.querySelector(".basket__item-delete");
-
-//     // this.button.addEventListener("click", () => {
-//     //   this.events.emit("card:select", { card: this })
-//     // });
-
-//     // this.deleteBtn.addEventListener("click", () => {
-//     //   this.events.emit("card:delete", { card: this })
-//     // });
-
-//   }
-
-//   setData(cardData: ICard) {
-// 		this.cardId = cardData.id;
-	
-// 		this.title.textContent = cardData.title;
-// 		this.price.textContent = `${String(cardData.price) + " синапсов"}`;
-// 		// this.description.textContent = cardData.description; 
-// 		this.image.src = cardData.image;
-// 		this.category.textContent = cardData.category;
-//     // кнопка
-
-//     if(cardData.price === null) {
-//       this.price.textContent = "Бесценно"
-//     }
-// 	}
-
-//   get id() {
-//     return this.cardId
-//   }
-
-//   deleteCard() {
-//     this.itemElement.remove();
-//     this.itemElement = null;
-//   }
-
-//   render() {
-//     return this.itemElement
-//   }
-// }
 export class Card extends Component<ICard> {
-  // protected itemElement: HTMLElement;
-  protected events: IEvents;
-  protected description?: HTMLElement;
-  protected title: HTMLElement;
-  protected cardId: string;
-  protected image?: HTMLImageElement;
-  protected button?: HTMLButtonElement;
-  protected price: HTMLElement;
-  protected category?: HTMLElement;
-  // protected deleteBtn?: HTMLElement;
 
-  constructor(container: HTMLElement, events: IEvents, actions?: ICardActions) {
-    super(container);
-   
-    this.events = events;
-
-    this.title = ensureElement<HTMLElement>(".card__title", this.container);
-    this.image = ensureElement(".card__image", this.container) as HTMLImageElement;
-    this.price = ensureElement<HTMLElement>(".card__price", this.container);
-    this.category = ensureElement<HTMLElement>(".card__category", this.container);
-    // this.deleteBtn = this.itemElement.querySelector(".basket__item-delete");
-    this.button = container.querySelector(".gallery__item") as HTMLButtonElement;
+    protected itemElement: HTMLElement;
+    protected _description?: HTMLElement;
+    protected _title: HTMLElement;
+    protected _id: string;
+    protected _index: HTMLElement;
+    protected _image: HTMLImageElement;
+    protected button: HTMLButtonElement;
+    protected _price: HTMLElement;
+    protected _category?: HTMLElement;
 
 
-    // this.button.addEventListener("click", () => {
-    //   this.events.emit("card:select", { card: this })
-    // });
+    constructor(protected template: HTMLTemplateElement, protected events: IEvents) {
+        super(template);
 
-    // this.deleteBtn.addEventListener("click", () => {
-    //   this.events.emit("card:delete", { card: this })
-    // });
+        this.itemElement = cloneTemplate(template);
 
-    // if (actions?.onClick) {
-    //   if (this.button) {
-    //       this.button.addEventListener('click', actions.onClick);
-    //   } else {
-    //       container.addEventListener('click', actions.onClick);
-    //   }
-    // }
+        this._price = ensureElement(".card__price", this.itemElement);
+        this._title = ensureElement(".card__title", this.itemElement);
+        this._category = this.itemElement.querySelector(".card__category");
+        this._image = this.itemElement.querySelector(".card__image");
+        this._description = this.itemElement.querySelector(".card__text");
+        this._index = this.itemElement.querySelector(".basket__item-index");
+        this.button = this.itemElement.querySelector(".card__button");
 
-  }
+        if (this.button) {
+            this.button.addEventListener("click", () => {
+                if (this.button && this._description) {
+                    this.events.emit("modalView:submit", { cardId: this._id });
+                } else if (this.button && !this._description) {
+                    this.events.emit("card: delete", { cardId: this._id });
+                }
+            })
+        }
 
-  // изменяет текст
-  set name(value: string) {
-    this.setText(this.price, value);
-  }
+        if (this.itemElement.classList.contains("gallery__item")) {
+            this.itemElement.addEventListener("click", () => {
+                this.events.emit("modalView:open", { cardId: this._id });
+            })
+        }
+    }
 
-  // пример для кнопок выбора оплаты
-  // set complited(value: boolean) {
-  //   this.toggleClass(this.button, "card", value);
-  //   this.toggleClass(this.button, "cash", !value);
-  // }
-  // card1.complited = true
+    set id(id: string) {
+        this._id = id;
+    }
 
+    set description(description: string) {
+        if (this._description) {
+            this.setText( this._description, description);
+        }
+    }
 
+    set title(title: string) {
+        this.setText( this._title, title);
+    }
 
+    set category(name: string) {
+        this.setText( this._category, name);
+        this.setCategory(name);
+    }
+
+    set price(price: number) {
+        if (price === null) {
+            this.setText(this._price, "Бесценно");
+            if (this.button) {
+                this.setDisabled( this.button, true);
+            }
+        } else {
+            this.setText(this._price, `${price.toString()} синапсов`);
+        }
+    }
+
+    // Цвет категории
+    protected setCategory(name: string): void {
+        const colorsCategory: { [key: string]: string } = {
+            "софт-скил": "soft",
+            "другое": "other",
+            "кнопка": "button",
+            "дополнительное": "additional",
+            "хард-скил": "hard"
+        }
+
+        const items = (Object.keys(colorsCategory))
+        items.forEach((key) => {
+            if (key === name) {
+                this.toggleClass(this._category, `card__category_${colorsCategory[key]}`, true);
+            }
+        })
+    }
+
+    set index(value: number) {
+        this.setText(this._index, value);
+    }
+
+    set image(link: string) {
+        this.setImage(this._image, `${CDN_URL}${link}`, `${link}`);
+    }
+
+    // Смена текста кнопки
+    replaceTextBtn(value: boolean) {
+        if (value) {
+            this.setText(this.button, "Удалить из корзины");
+        } else {
+            this.setText(this.button, "В корзину");
+        }
+    }
+
+    // возвращает полностью заполненную карточку с установленными слушателями
+    render(cardData: Partial<ICard>): HTMLElement {
+        const { 
+            ...obj 
+        } = cardData;
+        Object.assign(this, obj);
+        return this.itemElement
+    }
 }

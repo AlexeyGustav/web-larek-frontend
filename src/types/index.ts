@@ -6,6 +6,8 @@ export type TBingo = Pick<IBasket, 'total'>;
 
 export type TErrorOrder = Partial<Pick<IInfoOrder, 'address' | 'email' | 'payment' | 'phone'>>;
 
+export type TPayment = Pick<IInfoOrder, 'payment'|'address'>;
+
 export type ApiListResponse = {
   items: ICard[];
   total: number;

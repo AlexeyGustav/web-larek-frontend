@@ -13,6 +13,7 @@ import { cloneTemplate, createElement, ensureElement } from "./utils/utils";
 import { ICard, ICoursesApi } from "./types/index";
 import { Modal } from "./components/view/Modal";
 import { Basket } from './components/view/Basket';
+import { Payment } from './components/view/Payment';
 
 
 
@@ -47,8 +48,8 @@ const modal = new Modal(modalContainer, events);
 const basketData = new BasketData(events)
 const basket = new Basket(basketTemplate, events);
 const orderData = new OrderData(events);
+const paymentOrder = new Payment(cloneTemplate(orderTemplate), events);
 
-const cardItems = new CardData(events) 
 
 
 // Получаем карточки с сервера
@@ -69,13 +70,15 @@ api.getListCards()
               })
           })
       })
-  }).catch(console.error)
+  }).catch(
+    console.error
+  )
 
   // Модальное окно Preview
 events.on('modalView:open', (data: { cardId: string }) => {
-  const cardBasket = basketData.contains(data.cardId) // возвращает true или false
-  const selectCard = cardData.getCard(data.cardId)
-  const cardPreview = new Card(cardPreviewTemplate, events)
+  const cardBasket = basketData.contains(data.cardId);
+  const selectCard = cardData.getCard(data.cardId);
+  const cardPreview = new Card(cardPreviewTemplate, events);
 
   cardData.setSelected(data.cardId);
 
@@ -155,7 +158,26 @@ events.on('basket:changed', () => {
   });
 });
 
+events.on('card: delete', (data: { cardId: string }) => {
+  basketData.remove(data.cardId)
+});
 
+// Открыть модальное оплаты
+events.on('basket:submit', () => {
+  const address = orderData.setErrors().address;
+  const payment = orderData.setErrors().payment;
+
+  modal.render({
+      modalContent: paymentOrder.render({
+          valid: !payment && !address,
+          address: orderData.getOrder().address,
+          payment: orderData.getOrder().payment,
+          error: getErrorMessage({ payment, address })
+      })
+  });
+
+  modal.openModal();
+});
 
 
 // Настройки полей формы
@@ -168,14 +190,14 @@ events.on('form:change', (data: {
 // Сообщения об ошибках
 function getErrorMessage(errors: Partial<IInfoOrder>): string {
   return Object.values(errors).filter(i => !!i).join(' и ');
-}
+};
 
 // Фиксация модального окна
 events.on('modal:open', () => {
   page.blockPageScroll(true)
-})
+});
 
 events.on('modal:close', () => {
   page.blockPageScroll(false)
-})
+});
 
