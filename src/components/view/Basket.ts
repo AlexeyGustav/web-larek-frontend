@@ -44,7 +44,9 @@ export class Basket extends Component<IBasket> {
         }
     };
 
-
+    toggleButton(state: boolean) {
+        this.setDisabled(this.basketBtn, state);
+    };
     
     render(data?: IBasket): HTMLElement {
         Object.assign(this as object, data ?? {});

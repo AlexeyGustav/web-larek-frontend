@@ -36,18 +36,30 @@ export class Modal extends Component<IModal> {
     this._modalContent.replaceChildren(content);
   }
 
+  // Закрыть оверлей на кнопку ESC
+  closeEscape = (evt: KeyboardEvent) => {
+    if (evt.key === "Escape") {
+      this.closeModal();
+    }
+  }
+
+  // метод переключения модального окна
+  toggleModal(state: boolean) {
+    this.toggleClass(this.container, "modal_active", state);
+  }
+
   // Открыть модальное окно
   openModal() {
-    // document.addEventListener("keydown", this.closeEscape);
+    document.addEventListener("keydown", this.closeEscape);
     this.events.emit("modal:open");
-    // this.toggleModal(true)
+    this.toggleModal(true)
   }
 
   // Закрыть модальное окно
   closeModal() {
-    // document.removeEventListener("keydown", this.closeEscape)
+    document.removeEventListener("keydown", this.closeEscape)
     this.events.emit("modal:close");
-    // this.toggleModal(false)
+    this.toggleModal(false)
     this.modalContent = null;
   }
 

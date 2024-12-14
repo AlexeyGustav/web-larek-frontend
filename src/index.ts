@@ -1,7 +1,7 @@
 import './scss/styles.scss';
 
 import { Api } from "./components/base/api";
-import { EventEmitter, IEvents } from "./components/base/events";
+import { EventEmitter } from "./components/base/events";
 import { API_URL, settings } from "./utils/constants";
 import { CoursesApi } from "./components/model/CoursesApi";
 import { CardData } from "./components/model/cardData";
@@ -9,19 +9,14 @@ import { BasketData } from './components/model/BasketData';
 import { OrderData } from './components/model/OrderData';
 import { Component, Card } from "./components/view/Card";
 import { Page } from './components/view/Page';
-import { cloneTemplate, createElement, ensureElement } from "./utils/utils";
-import { ICard, ICoursesApi } from "./types/index";
+import { ICoursesApi, IInfoOrder } from "./types/index";
 import { Modal } from "./components/view/Modal";
 import { Basket } from './components/view/Basket';
 import { Payment } from './components/view/Payment';
-
-
-
+import { Contacts } from './components/view/Contacts';
+import { Bingo } from './components/view/Bingo';
+import { cloneTemplate, ensureElement } from "./utils/utils";
 import { cardsData } from "./tempMokData";
-
-
-
-
 
 // Контейнеры
 const pageContainer = ensureElement<HTMLElement>('.page');
@@ -49,13 +44,14 @@ const basketData = new BasketData(events)
 const basket = new Basket(basketTemplate, events);
 const orderData = new OrderData(events);
 const paymentOrder = new Payment(cloneTemplate(orderTemplate), events);
-
+const success = new Bingo(cloneTemplate(successTemplate), events);
+const contacts = new Contacts(cloneTemplate(templateContacts), events);
 
 
 // Получаем карточки с сервера
-events.onAll((event) => {
-  console.log(event.eventName, event.data);
-});
+// events.onAll((event) => {
+//   console.log(event.eventName, event.data);
+// });
 
 // Получаем карточки с сервера и загружаем в галерею
 api.getListCards()
@@ -162,7 +158,7 @@ events.on('card: delete', (data: { cardId: string }) => {
   basketData.remove(data.cardId)
 });
 
-// Открыть модальное оплаты
+// Модальное окно оплата
 events.on('basket:submit', () => {
   const address = orderData.setErrors().address;
   const payment = orderData.setErrors().payment;
@@ -179,6 +175,22 @@ events.on('basket:submit', () => {
   modal.openModal();
 });
 
+// Открыть модальное контакты
+events.on('order:submit', () => {
+  const phone = orderData.setErrors().phone;
+  const email = orderData.setErrors().email;
+
+  modal.render({
+      modalContent: contacts.render({
+          valid: !email && !phone,
+          phone: orderData.getOrder().phone,
+          email: orderData.getOrder().email,
+          error: getErrorMessage({ email, phone })
+      })
+  });
+
+  modal.openModal();
+});
 
 // Настройки полей формы
 events.on('form:change', (data: { 
@@ -187,10 +199,64 @@ events.on('form:change', (data: {
   orderData.setField(data.field, data.value);
 });
 
+
 // Сообщения об ошибках
 function getErrorMessage(errors: Partial<IInfoOrder>): string {
   return Object.values(errors).filter(i => !!i).join(' и ');
 };
+
+// Обновление полей формы
+events.on('order:changed', () => {
+  const { 
+      payment, 
+      address, 
+      email, 
+      phone 
+  } = orderData.setErrors()
+
+  contacts.render({
+      valid: !email && !phone,
+      phone: orderData.getOrder().phone,
+      email: orderData.getOrder().email,
+      error: getErrorMessage({ email, phone })
+  });
+  paymentOrder.render({
+      valid: !payment && !address,
+      payment: orderData.getOrder().payment,
+      address: orderData.getOrder().address,
+      error: getErrorMessage({ payment, address })
+  });
+});
+
+// Модальное окно завершение заказа - открыть
+events.on('contacts:submit', () => {
+  const orderAll = {
+      ...orderData.getOrder(),
+      total: basketData.getTotal(),
+      items: basketData.getIdBasketList()
+  };
+
+  api.allOrder(orderAll)
+      .then(data => {
+          // console.log(data)
+          modal.render({
+              modalContent: success.render({
+                  total: data.total
+              })
+          });
+          basketData.clear();
+          orderData.clear();
+          modal.openModal();
+      }).catch(
+          console.error
+      )
+});
+
+// Модальное окно завершение заказа - закрыть
+events.on('success:close', () => {
+  modal.closeModal()
+})
+
 
 // Фиксация модального окна
 events.on('modal:open', () => {

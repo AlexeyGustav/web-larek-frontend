@@ -1,6 +1,6 @@
-import { IEvents } from "../base/events";
 import { ensureAllElements, ensureElement } from "../../utils/utils";
-import { IForm, TPayment } from "../../types";
+import { IEvents } from "../base/events";
+import { IForm, TPayment } from "../../types/index";
 import { Form } from "./Form";
 
 export class Payment extends Form<IForm> implements TPayment {

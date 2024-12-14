@@ -8,6 +8,8 @@ export type TErrorOrder = Partial<Pick<IInfoOrder, 'address' | 'email' | 'paymen
 
 export type TPayment = Pick<IInfoOrder, 'payment'|'address'>;
 
+export type TInfoBuyer = Pick<IInfoOrder, 'email'|'phone'>;
+
 export type ApiListResponse = {
   items: ICard[];
   total: number;
@@ -95,4 +97,9 @@ export interface IOrderData {
   setErrors(): TErrorOrder;
   setField(field: keyof IInfoOrder, value: string): void;
   clear(): void;
+}
+
+export interface IBasket {
+  items: HTMLElement[];
+  total: number;
 }

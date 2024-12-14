@@ -57,4 +57,18 @@ export class BasketData implements IBasketData {
         }
     };
 
+    // Общая сумма в корзине
+    getTotal(): number {
+        if (!this._cardsBasket.length) {
+            return 0;
+        } else {
+            return this._cardsBasket.map((item) => item.price).reduce((a, b) => a + b);
+        };
+    };
+
+    clear(): void {
+        this._cardsBasket = [];
+        this.events.emit('basket:changed');
+    };
+
 };

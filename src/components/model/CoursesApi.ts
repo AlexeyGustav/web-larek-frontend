@@ -18,7 +18,7 @@ export class CoursesApi {
     }
     
     allOrder (data: TDataOrder): Promise<TBingo> {
-        console.log(data);
+        // console.log(data);
         return this.baseUrl.post('/order', data, 'POST')
         .then((result: TBingo) => result);
     };
