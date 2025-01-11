@@ -14,13 +14,11 @@ import { ICard } from "./types/index";
 import { cardsData } from "./tempMokData";
 
 // const api = new Api(API_URL)
-const api = new AuctionAPI(CDN_URL, API_URL)
 
 // const apiData = api.get('/product/')
 // console.log('api: ', apiData);
 // apiData.then((data: unknown) => {console.log(data)})
 
-const events: IEvents = new EventEmitter();
 
 // Отрисовка
 const container = document.querySelector(".gallery")
@@ -34,13 +32,35 @@ const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
 const orderTemplate = ensureElement<HTMLTemplateElement>('#order');
 const successTemplate = ensureElement<HTMLTemplateElement>('#success');
 
+
+const api = new AuctionAPI(CDN_URL, API_URL)
+const events: IEvents = new EventEmitter();
+const card = new Card(cardCatalogTemplate, events);
+
+
 // events.onAll((event) => {
 //   console.log(event.eventName, event.data);
 // })
 
 // Получаем лоты с сервера
 api.getLotList()
-  .then((data) => {console.log("data", data)})
+  .then((data) => {
+    console.log("data", data);
+    
+
+    
+    // data.forEach(cards => {
+    //   let arrayCards = [cards]
+    //   console.log('arrayCards: ', arrayCards);
+    //   card.setData(cards);
+
+    //   container.append(card.render())
+    // });
+
+
+
+
+  })
   .catch(err => {
     console.error(err);
 });
@@ -48,7 +68,11 @@ api.getLotList()
 
 
 
-const card = new Card(cardCatalogTemplate, events)
-card.setData(cardsData[2])
-
+// cardsData.forEach(cards => {
+  
+//   card.setData(cards);
+//   const cardsList = card.render();
+//   console.log('cardsList: ', cardsList);
+//   container.append(cardsList)
+// });
 container.append(card.render())

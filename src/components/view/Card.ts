@@ -37,7 +37,7 @@ export class Card {
 
   }
 
-  setData(cardData: ICard) {
+  setData(cardData: Partial<ICard>) {
 		this.cardId = cardData.id;
 	
 		this.title.textContent = cardData.title;
