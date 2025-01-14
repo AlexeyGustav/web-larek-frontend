@@ -36,7 +36,3 @@ export class AuctionAPI extends Api implements IAuctionAPI{
     );
   }
 }
-
-
-
-// теперь переведи это на русский язык

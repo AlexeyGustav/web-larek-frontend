@@ -3,11 +3,12 @@ import './scss/styles.scss';
 
 import { ApiListResponse, ApiPostMethods, Api } from "./components/base/api";
 import { EventEmitter, IEvents } from "./components/base/events";
-import { API_URL, CDN_URL } from "./utils/constants";
+import { API_URL, CDN_URL, settings } from "./utils/constants";
 import { AuctionAPI } from "./components/model/ActionApi";
 import { Card } from "./components/view/Card";
 import { cloneTemplate, createElement, ensureElement } from "./utils/utils";
 import { ICard } from "./types/index";
+import { CardsContainer } from "./components/view/CardsContainer";
 
 
 
@@ -21,7 +22,7 @@ import { cardsData } from "./tempMokData";
 
 
 // Отрисовка
-const container = document.querySelector(".gallery")
+// const container = document.querySelector(".gallery")
 
 
 // Все шаблоны
@@ -32,10 +33,11 @@ const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
 const orderTemplate = ensureElement<HTMLTemplateElement>('#order');
 const successTemplate = ensureElement<HTMLTemplateElement>('#success');
 
-
+// Все экзампляры
 const api = new AuctionAPI(CDN_URL, API_URL)
 const events: IEvents = new EventEmitter();
-const card = new Card(cardCatalogTemplate, events);
+const cardContainer = new CardsContainer(document.querySelector(".gallery"));
+console.log('cardContainer: ', cardContainer);
 
 
 // events.onAll((event) => {
@@ -46,19 +48,14 @@ const card = new Card(cardCatalogTemplate, events);
 api.getLotList()
   .then((data) => {
     console.log("data", data);
-    
 
-    
-    // data.forEach(cards => {
-    //   let arrayCards = [cards]
-    //   console.log('arrayCards: ', arrayCards);
-    //   card.setData(cards);
+    const renderCards = data.map(item => {
+      const card = new Card(cardCatalogTemplate, events);
+      card.setData(item);
+      return card.render()
+    })
 
-    //   container.append(card.render())
-    // });
-
-
-
+    cardContainer.render({ catalog: renderCards })
 
   })
   .catch(err => {
@@ -75,4 +72,16 @@ api.getLotList()
 //   console.log('cardsList: ', cardsList);
 //   container.append(cardsList)
 // });
-container.append(card.render())
+// container.append(card.render())
+
+// cardContainer.render(cardsData[0])
+
+// card.setData(cardsData[0])
+// card1.setData(cardsData[1])
+
+
+// const cardArray = [];
+// cardArray.push(card.render(), card1.render());
+
+
+// cardContainer.render({ catalog: cardArray })
