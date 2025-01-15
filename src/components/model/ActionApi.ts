@@ -17,15 +17,6 @@ export class AuctionAPI extends Api implements IAuctionAPI{
       super(baseUrl, options);
       this.cdn = cdn;
   }
-
-  // getLotList(): Promise<Idata> {
-  //   return this.get('/product').then((data: apiData) => {
-  //     console.log(data)
-  //     return data;
-
-  //   });
-  // }
-
   
   getLotList(): Promise<ICard[]> {
     return this.get('/product/').then((data: ApiListResponse<ICard>) =>

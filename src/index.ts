@@ -1,6 +1,7 @@
-import './scss/styles.scss';
+ import './scss/styles.scss';
 
 
+import { CardData } from "./components/model/CardData";
 import { ApiListResponse, ApiPostMethods, Api } from "./components/base/api";
 import { EventEmitter, IEvents } from "./components/base/events";
 import { API_URL, CDN_URL, settings } from "./utils/constants";
@@ -12,7 +13,7 @@ import { CardsContainer } from "./components/view/CardsContainer";
 
 
 
-import { cardsData } from "./tempMokData";
+import { mokData } from "./tempMokData";
 
 // const api = new Api(API_URL)
 
@@ -37,8 +38,8 @@ const successTemplate = ensureElement<HTMLTemplateElement>('#success');
 const api = new AuctionAPI(CDN_URL, API_URL)
 const events: IEvents = new EventEmitter();
 const cardContainer = new CardsContainer(document.querySelector(".gallery"));
-console.log('cardContainer: ', cardContainer);
 
+const cardData = new CardData(events)
 
 // events.onAll((event) => {
 //   console.log(event.eventName, event.data);
@@ -47,16 +48,8 @@ console.log('cardContainer: ', cardContainer);
 // Получаем лоты с сервера
 api.getLotList()
   .then((data) => {
-    console.log("data", data);
-
-    const renderCards = data.map(item => {
-      const card = new Card(cardCatalogTemplate, events);
-      card.setData(item);
-      return card.render()
-    })
-
-    cardContainer.render({ catalog: renderCards })
-
+    cardData.cards = data;
+    events.emit("initialData:loaded");
   })
   .catch(err => {
     console.error(err);
@@ -85,3 +78,13 @@ api.getLotList()
 
 
 // cardContainer.render({ catalog: cardArray })
+
+events.on("initialData:loaded", () => {
+      const renderCards = cardData.cards.map(item => {
+      const card = new Card(cardCatalogTemplate, events);
+      card.setData(item);
+      return card.render();
+    })
+
+    cardContainer.render({ catalog: renderCards });
+})

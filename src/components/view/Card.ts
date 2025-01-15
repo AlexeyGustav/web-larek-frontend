@@ -50,6 +50,21 @@ export class Card {
     if(cardData.price === null) {
       this.price.textContent = "Бесценно"
     }
+
+    switch (this.category.textContent) {
+      case "другое":
+        this.category.style.background = "#FAD883"
+        break
+      case "дополнительное":
+        this.category.style.background = "#B783FA"
+        break
+      case "кнопка":
+        this.category.style.background = "#83DDFA"
+        break
+      case "хард-скил":
+        this.category.style.background = "#FAA083"
+        break
+    }
 	}
 
   get id() {
