@@ -24,12 +24,15 @@ export class Card {
     this.price = this.itemElement.querySelector(".card__price");
     this.category = this.itemElement.querySelector(".card__category");
     this.button = this.itemElement.firstElementChild.querySelector(".gallery__item");
-    console.log('this', this.button);
     // this.deleteBtn = this.itemElement.querySelector(".basket__item-delete");
 
-    // this.button.addEventListener("click", () => {
-    //   this.events.emit("card:select", { card: this })
-    // });
+    this.itemElement.addEventListener("click", () => {
+      this.events.emit("card:select", { card: this })
+    });
+
+    this.itemElement.addEventListener("click", () => {
+      this.events.emit("cardPreview:open", { card: this })
+    });
 
     // this.deleteBtn.addEventListener("click", () => {
     //   this.events.emit("card:delete", { card: this })

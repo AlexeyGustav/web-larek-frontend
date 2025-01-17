@@ -10,6 +10,8 @@ import { Card } from "./components/view/Card";
 import { cloneTemplate, createElement, ensureElement } from "./utils/utils";
 import { ICard } from "./types/index";
 import { CardsContainer } from "./components/view/CardsContainer";
+import { Modal } from "./components/view/Modal";
+import { ModalCardPreview } from "./components/view/CardPreview";
 
 
 
@@ -33,10 +35,14 @@ const cardBasketTemplate = ensureElement<HTMLTemplateElement>('#card-basket');
 const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
 const orderTemplate = ensureElement<HTMLTemplateElement>('#order');
 const successTemplate = ensureElement<HTMLTemplateElement>('#success');
+const modalContainer = ensureElement<HTMLTemplateElement>('#modal-container');
+const modalContent = ensureElement<HTMLDivElement>('.modal__content');
+console.log('modalContainer: ', modalContent);
 
 // Все экзампляры
 const api = new AuctionAPI(CDN_URL, API_URL)
-const events: IEvents = new EventEmitter();
+// const events: IEvents = new EventEmitter();
+const events = new EventEmitter();
 const cardContainer = new CardsContainer(document.querySelector(".gallery"));
 
 const cardData = new CardData(events)
@@ -44,6 +50,10 @@ const cardData = new CardData(events)
 // events.onAll((event) => {
 //   console.log(event.eventName, event.data);
 // })
+
+events.onAll((event) => {
+  console.log(event.eventName, event.data)
+})
 
 // Получаем лоты с сервера
 api.getLotList()
@@ -87,4 +97,18 @@ events.on("initialData:loaded", () => {
     })
 
     cardContainer.render({ catalog: renderCards });
+});
+
+const modal = new Modal(modalContainer, events);
+console.log('modal: ', modal);
+
+const modalCardPreview = new ModalCardPreview(modalContainer, cardPreviewTemplate, events);
+// console.log('modalCardPreview: ', modalCardPreview);
+
+events.on('cardPreview:open', () => {
+  // const a = modalCardPreview.setData(mokData[1])
+	// modalCardPreview.render();
+  modal.open();
+  // modalContent.append(modalCardPreview.render())
+  // console.log('modalCardPreview: ', modalCardPreview.render());
 })
