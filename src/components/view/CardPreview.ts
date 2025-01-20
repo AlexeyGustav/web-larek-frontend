@@ -3,7 +3,7 @@ import { IEvents } from "../base/events";
 import { cloneTemplate, createElement, ensureElement } from "../../utils/utils";
 import { ICard } from "../../types/index";
 
-export interface IModalCardPreview {
+interface IModalCardPreview {
   id: string;
   title: string;
   price: number | null;
@@ -51,7 +51,7 @@ export class ModalCardPreview extends Modal<IModalCardPreview> {
 
 
 
-    super.open();
+    // super.open();
   }
 
   render() {

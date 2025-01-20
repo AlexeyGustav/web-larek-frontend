@@ -1,16 +1,17 @@
+import { Component } from "../base/Component";
 import { IEvents } from "../base/events";
 
-export class Modal<T> {
+export class Modal<T> extends Component<T> {
   protected modal: HTMLElement;
   protected events: IEvents;
 
   constructor(container: HTMLElement, events: IEvents) {
-
+    super(container);
     this.events = events;
-    this.modal = container;
-    const closeButtonElement = this.modal.querySelector(".modal__close");
+    // this.modal = container;
+    const closeButtonElement = this.container.querySelector(".modal__close");
     closeButtonElement.addEventListener("click", this.close.bind(this));
-    this.modal.addEventListener("mousedown", (evt) => {
+    this.container.addEventListener("mousedown", (evt) => {
       if (evt.target === evt.currentTarget) {
         this.close();
       }
@@ -19,12 +20,12 @@ export class Modal<T> {
   }
 
   open() {
-    this.modal.classList.add("modal_active");
+    this.container.classList.add("modal_active");
     document.addEventListener("keyup", this.handleEscUp);
-  }
+      }
 
   close() {
-    this.modal.classList.remove("modal_active");
+    this.container.classList.remove("modal_active");
     document.removeEventListener("keyup", this.handleEscUp);
   }
 

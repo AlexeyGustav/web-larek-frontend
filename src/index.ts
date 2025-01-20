@@ -6,22 +6,17 @@ import { ApiListResponse, ApiPostMethods, Api } from "./components/base/api";
 import { EventEmitter, IEvents } from "./components/base/events";
 import { API_URL, CDN_URL, settings } from "./utils/constants";
 import { AuctionAPI } from "./components/model/ActionApi";
-import { Card } from "./components/view/Card";
+import { Card, ModalCardPreview } from "./components/view/Card";
 import { cloneTemplate, createElement, ensureElement } from "./utils/utils";
 import { ICard } from "./types/index";
 import { CardsContainer } from "./components/view/CardsContainer";
 import { Modal } from "./components/view/Modal";
-import { ModalCardPreview } from "./components/view/CardPreview";
+// import { ModalCardPreview } from "./components/view/CardPreview";
 
 
 
 import { mokData } from "./tempMokData";
 
-// const api = new Api(API_URL)
-
-// const apiData = api.get('/product/')
-// console.log('api: ', apiData);
-// apiData.then((data: unknown) => {console.log(data)})
 
 
 // Отрисовка
@@ -47,9 +42,6 @@ const cardContainer = new CardsContainer(document.querySelector(".gallery"));
 
 const cardData = new CardData(events)
 
-// events.onAll((event) => {
-//   console.log(event.eventName, event.data);
-// })
 
 events.onAll((event) => {
   console.log(event.eventName, event.data)
@@ -91,7 +83,7 @@ api.getLotList()
 
 events.on("initialData:loaded", () => {
       const renderCards = cardData.cards.map(item => {
-      const card = new Card(cardCatalogTemplate, events);
+      const card = new Card(cloneTemplate(cardCatalogTemplate), events);
       card.setData(item);
       return card.render();
     })
@@ -103,7 +95,6 @@ const modal = new Modal(modalContainer, events);
 console.log('modal: ', modal);
 
 const modalCardPreview = new ModalCardPreview(modalContainer, cardPreviewTemplate, events);
-// console.log('modalCardPreview: ', modalCardPreview);
 
 events.on('cardPreview:open', () => {
   // const a = modalCardPreview.setData(mokData[1])
@@ -111,4 +102,10 @@ events.on('cardPreview:open', () => {
   modal.open();
   // modalContent.append(modalCardPreview.render())
   // console.log('modalCardPreview: ', modalCardPreview.render());
+
+
+
+console.log('modalCardPreview: ', modalCardPreview.render());
+  
+modal.render({data: modalCardPreview.render()})
 })

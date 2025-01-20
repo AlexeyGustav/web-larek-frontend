@@ -1,9 +1,10 @@
 import { EventEmitter, IEvents } from "../../components/base/events";
 import { cloneTemplate, createElement, ensureElement } from "../../utils/utils";
+import { Component } from "../../components/base/Component";
 import { ICard } from "../../types/index";
 
-export class Card {
-  protected itemElement: HTMLElement;
+export class Card  extends Component<ICard> {
+  // protected itemElement: HTMLElement;
   protected events: IEvents;
   // protected description?: HTMLElement;
   protected title: HTMLElement;
@@ -14,23 +15,23 @@ export class Card {
   protected category?: HTMLElement;
   // protected deleteBtn?: HTMLElement;
 
-  constructor(template: HTMLTemplateElement, events: IEvents) {
+  constructor(container: HTMLElement, events: IEvents) {
+    super(container);
     this.events = events;
-    this.itemElement = cloneTemplate(template);
 
     // this.description = this.itemElement.querySelector(".card__text");
-    this.title = this.itemElement.querySelector(".card__title");
-    this.image = this.itemElement.querySelector(".card__image");
-    this.price = this.itemElement.querySelector(".card__price");
-    this.category = this.itemElement.querySelector(".card__category");
-    this.button = this.itemElement.firstElementChild.querySelector(".gallery__item");
+    this.title = this.container.querySelector(".card__title");
+    this.image = this.container.querySelector(".card__image");
+    this.price = this.container.querySelector(".card__price");
+    this.category = this.container.querySelector(".card__category");
+    this.button = this.container.firstElementChild.querySelector(".gallery__item");
     // this.deleteBtn = this.itemElement.querySelector(".basket__item-delete");
 
-    this.itemElement.addEventListener("click", () => {
+    this.container.addEventListener("click", () => {
       this.events.emit("card:select", { card: this })
     });
 
-    this.itemElement.addEventListener("click", () => {
+    this.container.addEventListener("click", () => {
       this.events.emit("cardPreview:open", { card: this })
     });
 
@@ -74,9 +75,31 @@ export class Card {
     return this.cardId
   }
 
-  deleteCard() {
-    this.itemElement.remove();
-    this.itemElement = null;
+  // deleteCard() {
+  //   this.itemElement.remove();
+  //   this.itemElement = null;
+  // }
+
+}
+
+// Отображение карточки в модальном окне
+
+interface IModalCardPreview {
+  description: string;
+  button: string;
+}
+
+export class ModalCardPreview<IModalCardPreview> extends Card {
+  protected itemElement: HTMLElement;
+  protected description: HTMLElement;
+  protected button: HTMLButtonElement;
+
+  constructor(container: HTMLElement, template: HTMLTemplateElement, events: IEvents) {
+    super(container, events)
+
+    this.itemElement = cloneTemplate(template);
+    this.description = this.itemElement.querySelector(".card__text");
+    this.button = this.itemElement.querySelector(".button");
   }
 
   render() {
