@@ -113,10 +113,17 @@ events.on('card:select', (data: { cardId: string }) => {
 console.log(selectCard);
 
 
-// modal.render({
-//   modal: modalCardPreview.render({
-//       ...selectCard
-//   })
-// });
+modal.render({
+  content: modalCardPreview.render({
+    ...selectCard
+  })
+});
+
+
  
 });
+
+// events.on('card:select', (item: LotItem) => {
+//   console.log('item: ', item);
+//   appData.setPreview(item);
+// });

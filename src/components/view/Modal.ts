@@ -24,7 +24,7 @@ export class Modal<T> extends Component<T> {
   }
 
   // Запоняем контентом
-  set modalContent(content: HTMLElement) {
+  set content(content: HTMLElement) {
     this.modal.replaceChildren(content);
   }
 
