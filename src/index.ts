@@ -107,21 +107,21 @@ const modal = new Modal(modalContainer, events);
 
 
 events.on('card:select', (data: { cardId: string }) => {
-  const modalCardPreview = new Card(cloneTemplate(cardPreviewTemplate), events);
+//   const modalCardPreview = new Card(cloneTemplate(cardPreviewTemplate), events);
 
-  const selectCard = cardData.getCard(data.cardId)
-console.log(selectCard);
+//   const selectCard = cardData.getCard(data.cardId)
+// console.log(selectCard);
 
 
-modal.render({
-  content: modalCardPreview.render({
-    ...selectCard
-  })
+// modal.render({
+//   content: modalCardPreview.render({
+//     ...selectCard
+//   })
 });
 
 
  
-});
+// });
 
 // events.on('card:select', (item: LotItem) => {
 //   console.log('item: ', item);
