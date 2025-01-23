@@ -11,6 +11,7 @@ interface ICardsData {
 export class CardData implements ICardsData {
     protected _cards: ICard[];
     protected events: IEvents;
+    protected _selectCardId: string | null;
 
     constructor(events: IEvents) {
         this.events = events;
@@ -38,5 +39,15 @@ export class CardData implements ICardsData {
     getCard(cardId: string) {
         return this._cards.find((item) => item.id === cardId)
     }
+
+    // Получить карточки Selected
+    getSelected(): ICard {
+        return this.cards.find(card => card.id === this._selectCardId)!;
+    };
+
+    // Передать карточки Selected
+    setSelected(cardId: string): void {
+        this._selectCardId = cardId;
+    };
 
 }

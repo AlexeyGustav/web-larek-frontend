@@ -1,4 +1,4 @@
- import './scss/styles.scss';
+import './scss/styles.scss';
 
 
 import { CardData } from "./components/model/CardData";
@@ -6,12 +6,12 @@ import { ApiListResponse, ApiPostMethods, Api } from "./components/base/api";
 import { EventEmitter, IEvents } from "./components/base/events";
 import { API_URL, CDN_URL, settings } from "./utils/constants";
 import { AuctionAPI } from "./components/model/ActionApi";
-import { Card, ModalCardPreview } from "./components/view/Card";
+import { Card } from "./components/view/Card";
 import { cloneTemplate, createElement, ensureElement } from "./utils/utils";
 import { ICard } from "./types/index";
 import { CardsContainer } from "./components/view/CardsContainer";
 import { Modal } from "./components/view/Modal";
-// import { ModalCardPreview } from "./components/view/CardPreview";
+import { Component } from "./components/base/Component";
 
 
 
@@ -57,55 +57,81 @@ api.getLotList()
     console.error(err);
 });
 
-
-
-
-// cardsData.forEach(cards => {
-  
-//   card.setData(cards);
-//   const cardsList = card.render();
-//   console.log('cardsList: ', cardsList);
-//   container.append(cardsList)
-// });
-// container.append(card.render())
-
-// cardContainer.render(cardsData[0])
-
-// card.setData(cardsData[0])
-// card1.setData(cardsData[1])
-
-
-// const cardArray = [];
-// cardArray.push(card.render(), card1.render());
-
-
-// cardContainer.render({ catalog: cardArray })
-
 events.on("initialData:loaded", () => {
-      const renderCards = cardData.cards.map(item => {
+      const renderCards = cardData.cards.map((item) => {
       const card = new Card(cloneTemplate(cardCatalogTemplate), events);
-      card.setData(item);
-      return card.render();
+
+      // card.title = item.title;
+      // card.category = item.category;
+      // card.price= item.price;
+      // card.image = item.image;
+      // card.setData(item);
+      return card.render({
+        title: item.title,
+        image: item.image,
+        category: item.category,
+        price: item.price
+      });
     })
 
     cardContainer.render({ catalog: renderCards });
 });
 
+
+
+
+
+// Открыть модальное окно с карточкой товара
+
 const modal = new Modal(modalContainer, events);
-console.log('modal: ', modal);
 
-const modalCardPreview = new ModalCardPreview(modalContainer, cardPreviewTemplate, events);
+events.on('cardPreview:open',  () => {
+  const modalCardPreview = new Card(cloneTemplate(cardPreviewTemplate), events);
 
-events.on('cardPreview:open', () => {
-  // const a = modalCardPreview.setData(mokData[1])
-	// modalCardPreview.render();
   modal.open();
-  // modalContent.append(modalCardPreview.render())
-  // console.log('modalCardPreview: ', modalCardPreview.render());
+
+ const modalContainer = document.querySelector(".modal__container")
+
+ modalContainer.append(
+    modalCardPreview.render({
+               description: "Лизните этот леденец, чтобы мгновенно запоминать и узнавать любой цветовой код CSS.",
+      image: "https://larek-api.nomoreparties.co/content/weblarek/Shell.svg",
+      title: "HEX-леденец",
+      category: "другое",
+      price: 1450
+    })
+  )
+
+  // modal.render({
+  //   modalContent: modalCardPreview.render({
+  //        description: "Лизните этот леденец, чтобы мгновенно запоминать и узнавать любой цветовой код CSS.",
+  //     image: "https://larek-api.nomoreparties.co/content/weblarek/Shell.svg",
+  //     title: "HEX-леденец",
+  //     category: "другое",
+  //     price: 1450
+  //   })
+  // })
 
 
 
-console.log('modalCardPreview: ', modalCardPreview.render());
+
+//   const selectCard = cardData.getCard(data.cardId);
   
-modal.render({data: modalCardPreview.render()})
-})
+//   cardData.setSelected(data.cardId);
+  
+//   console.log('selectCard: ', selectCard);
+
+
+//   const modalContainer = new CardsContainer(document.querySelector(".modal__container"));
+
+//   const renderCards = cardData.cards.map((item) => {
+
+//   })
+// console.log("item", modalCardPreview);
+
+  // modalContainer.render({ 
+  //   catalog:  modalCardPreview.render({
+
+  //   })
+  // });
+});

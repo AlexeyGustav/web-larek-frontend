@@ -1,5 +1,5 @@
 interface ICardsContainer {
-  catalog: HTMLElement[];
+  catalog: HTMLElement[] | HTMLElement;
 }
 
 export class CardsContainer {
