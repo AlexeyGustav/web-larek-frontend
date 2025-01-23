@@ -1,6 +1,10 @@
 import { Component } from "../base/Component";
 import { IEvents } from "../base/events";
 
+interface IModalData {
+  content: HTMLElement;
+}
+
 export class Modal<T> extends Component<T> {
   protected modal: HTMLElement;
   protected events: IEvents;
@@ -22,22 +26,30 @@ export class Modal<T> extends Component<T> {
   // Запоняем контентом
   set modalContent(content: HTMLElement) {
     this.modal.replaceChildren(content);
-}
+  }
 
+  // Открыть модальное окно
   open() {
     this.container.classList.add("modal_active");
     document.addEventListener("keyup", this.handleEscUp);
       }
 
+  // Закрыть модальное окно
   close() {
     this.container.classList.remove("modal_active");
     document.removeEventListener("keyup", this.handleEscUp);
   }
 
+  // Закрыть модальное окно по кнопке Esc
   handleEscUp(evt: KeyboardEvent) {
     if (evt.key === "Escape") {
       this.close();
     }
   };
+
+  render(data?: Partial<IModalData>): HTMLElement {
+    Object.assign(this, data);
+    return this.container
+}
 
 }

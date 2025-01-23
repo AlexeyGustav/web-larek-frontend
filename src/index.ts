@@ -113,10 +113,10 @@ events.on('card:select', (data: { cardId: string }) => {
 console.log(selectCard);
 
 
-modal.render({
-  modal: modalCardPreview.render({
-      ...selectCard
-  })
-});
+// modal.render({
+//   modal: modalCardPreview.render({
+//       ...selectCard
+//   })
+// });
  
 });
