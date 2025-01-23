@@ -19,6 +19,11 @@ export class Modal<T> extends Component<T> {
     this.handleEscUp = this.handleEscUp.bind(this);
   }
 
+  // Запоняем контентом
+  set modalContent(content: HTMLElement) {
+    this.modal.replaceChildren(content);
+}
+
   open() {
     this.container.classList.add("modal_active");
     document.addEventListener("keyup", this.handleEscUp);
@@ -34,4 +39,5 @@ export class Modal<T> extends Component<T> {
       this.close();
     }
   };
+
 }

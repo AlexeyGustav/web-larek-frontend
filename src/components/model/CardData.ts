@@ -6,8 +6,14 @@ interface ICardsData {
 	addCard(card: ICard): void;
 	deleteCard(cardId: string): void;
 	getCard(cardId: string): ICard;
+    setSelected(item: string): void;
 }
-
+// export interface ICardData {
+//     cards: ICard[];
+//     getCard(cardId:string): ICard;
+//     getSelected(): void;
+//     setSelected(cardId:string): void;
+// }
 export class CardData implements ICardsData {
     protected _cards: ICard[];
     protected events: IEvents;
@@ -22,7 +28,7 @@ export class CardData implements ICardsData {
         this.events.emit('cards:changed')
     }
 
-    get cards () {
+    get cards() {
         return this._cards;
     }
 
@@ -42,12 +48,17 @@ export class CardData implements ICardsData {
 
     // Получить карточки Selected
     getSelected(): ICard {
-        return this.cards.find(card => card.id === this._selectCardId)!;
+        return this._cards.find(card => card.id === this._selectCardId)!;
     };
 
     // Передать карточки Selected
-    setSelected(cardId: string): void {
-        this._selectCardId = cardId;
-    };
+    // setSelected(cardId: string): void {
+    //     this._selectCardId = cardId;
+    // };
+
+    setSelected(item: string): void {
+        this._selectCardId = item;
+        // this.emitChanges('preview:changed', item);
+    }
 
 }

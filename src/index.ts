@@ -67,6 +67,7 @@ events.on("initialData:loaded", () => {
       // card.image = item.image;
       // card.setData(item);
       return card.render({
+        id: item.id,
         title: item.title,
         image: item.image,
         category: item.category,
@@ -85,53 +86,37 @@ events.on("initialData:loaded", () => {
 
 const modal = new Modal(modalContainer, events);
 
-events.on('cardPreview:open',  () => {
+// events.on('cardPreview:open',  () => {
+//   const modalCardPreview = new Card(cloneTemplate(cardPreviewTemplate), events);
+
+//   modal.open();
+
+//  const modalContainer = document.querySelector(".modal__container")
+
+//  modalContainer.append(
+//     modalCardPreview.render({
+//                description: "Лизните этот леденец, чтобы мгновенно запоминать и узнавать любой цветовой код CSS.",
+//       image: "https://larek-api.nomoreparties.co/content/weblarek/Shell.svg",
+//       title: "HEX-леденец",
+//       category: "другое",
+//       price: 1450
+//     })
+//   )
+
+// });
+
+
+events.on('card:select', (data: { cardId: string }) => {
   const modalCardPreview = new Card(cloneTemplate(cardPreviewTemplate), events);
 
-  modal.open();
-
- const modalContainer = document.querySelector(".modal__container")
-
- modalContainer.append(
-    modalCardPreview.render({
-               description: "Лизните этот леденец, чтобы мгновенно запоминать и узнавать любой цветовой код CSS.",
-      image: "https://larek-api.nomoreparties.co/content/weblarek/Shell.svg",
-      title: "HEX-леденец",
-      category: "другое",
-      price: 1450
-    })
-  )
-
-  // modal.render({
-  //   modalContent: modalCardPreview.render({
-  //        description: "Лизните этот леденец, чтобы мгновенно запоминать и узнавать любой цветовой код CSS.",
-  //     image: "https://larek-api.nomoreparties.co/content/weblarek/Shell.svg",
-  //     title: "HEX-леденец",
-  //     category: "другое",
-  //     price: 1450
-  //   })
-  // })
+  const selectCard = cardData.getCard(data.cardId)
+console.log(selectCard);
 
 
-
-
-//   const selectCard = cardData.getCard(data.cardId);
-  
-//   cardData.setSelected(data.cardId);
-  
-//   console.log('selectCard: ', selectCard);
-
-
-//   const modalContainer = new CardsContainer(document.querySelector(".modal__container"));
-
-//   const renderCards = cardData.cards.map((item) => {
-
-//   })
-// console.log("item", modalCardPreview);
-
-  // modalContainer.render({ 
-  //   catalog:  modalCardPreview.render({
-
-  //   })
-  // });
+modal.render({
+  modal: modalCardPreview.render({
+      ...selectCard
+  })
+});
+ 
 });

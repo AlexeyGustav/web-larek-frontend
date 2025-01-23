@@ -5,6 +5,8 @@ import { ICard } from "../../types/index";
 
 export class Card  extends Component<ICard> {
   // protected itemElement: HTMLElement;
+
+
   protected events: IEvents;
   protected _description?: HTMLElement;
   protected _title: HTMLElement;
@@ -27,7 +29,7 @@ export class Card  extends Component<ICard> {
     // this.deleteBtn = this.itemElement.querySelector(".basket__item-delete");
 
     this.container.addEventListener("click", () => {
-      this.events.emit("card:select", { card: this })
+      this.events.emit("card:select", { card: this.cardId })
     });
 
     this.container.addEventListener("click", () => {
@@ -62,6 +64,9 @@ export class Card  extends Component<ICard> {
   //       break
   //   }
 	// }
+  set id(id: string) {
+    this.cardId = id;
+  }
 
   get id() {
     return this.cardId
