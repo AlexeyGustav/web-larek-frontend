@@ -6,7 +6,7 @@ import { ApiListResponse, ApiPostMethods, Api } from "./components/base/api";
 import { EventEmitter, IEvents } from "./components/base/events";
 import { API_URL, CDN_URL, settings } from "./utils/constants";
 import { AuctionAPI } from "./components/model/ActionApi";
-import { Card } from "./components/view/Card";
+import { Card, ModalCardPreview } from "./components/view/Card";
 import { cloneTemplate, createElement, ensureElement } from "./utils/utils";
 import { ICard } from "./types/index";
 import { CardsContainer } from "./components/view/CardsContainer";
@@ -106,7 +106,7 @@ const modal = new Modal(modalContainer, events);
 // });
 
 
-events.on('card:select', (data: { cardId: string }) => {
+// events.on('card:select', (data: { cardId: string }) => {
 //   const modalCardPreview = new Card(cloneTemplate(cardPreviewTemplate), events);
 
 //   const selectCard = cardData.getCard(data.cardId)
@@ -117,13 +117,16 @@ events.on('card:select', (data: { cardId: string }) => {
 //   content: modalCardPreview.render({
 //     ...selectCard
 //   })
-});
+// });
 
 
  
 // });
 
-// events.on('card:select', (item: LotItem) => {
-//   console.log('item: ', item);
-//   appData.setPreview(item);
-// });
+const modalCardPreview = new ModalCardPreview(cloneTemplate(cardPreviewTemplate), events); 
+
+events.on('card:select', (item: ICard) => {
+  cardData.setPreview(item);
+  cardData.addCard(item);
+  console.log("007", cardData);
+});

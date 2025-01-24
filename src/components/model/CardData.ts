@@ -6,7 +6,7 @@ interface ICardsData {
 	addCard(card: ICard): void;
 	deleteCard(cardId: string): void;
 	getCard(cardId: string): ICard;
-    setSelected(item: string): void;
+    setPreview(item: ICard): void;
 }
 // export interface ICardData {
 //     cards: ICard[];
@@ -18,6 +18,7 @@ export class CardData implements ICardsData {
     protected _cards: ICard[];
     protected events: IEvents;
     protected _selectCardId: string | null;
+
 
     constructor(events: IEvents) {
         this.events = events;
@@ -56,8 +57,8 @@ export class CardData implements ICardsData {
     //     this._selectCardId = cardId;
     // };
 
-    setSelected(item: string): void {
-        this._selectCardId = item;
+    setPreview(item: ICard): void {
+        this._selectCardId = item.id;
         // this.emitChanges('preview:changed', item);
     }
 

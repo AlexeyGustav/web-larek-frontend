@@ -26,6 +26,7 @@ export class Card  extends Component<ICard> {
     this._price = this.container.querySelector(".card__price");
     this._category = this.container.querySelector(".card__category");
     this.button = this.container.firstElementChild.querySelector(".gallery__item");
+    this._description = this.container.querySelector(".card__text");
     // this.deleteBtn = this.itemElement.querySelector(".basket__item-delete");
 
     this.container.addEventListener("click", () => {
@@ -43,27 +44,6 @@ export class Card  extends Component<ICard> {
 
   }
 
-  // setData(cardData: Partial<ICard>) {
-
-  //   if(cardData.price === null) {
-  //     this._price.textContent = "Бесценно"
-  //   }
-
-  //   switch (this._category.textContent) {
-  //     case "другое":
-  //       this._category.style.background = "#FAD883"
-  //       break
-  //     case "дополнительное":
-  //       this._category.style.background = "#B783FA"
-  //       break
-  //     case "кнопка":
-  //       this._category.style.background = "#83DDFA"
-  //       break
-  //     case "хард-скил":
-  //       this._category.style.background = "#FAA083"
-  //       break
-  //   }
-	// }
   set id(id: string) {
     this.cardId = id;
   }
@@ -123,26 +103,30 @@ export class Card  extends Component<ICard> {
 
 // Отображение карточки в модальном окне
 
-// interface IModalCardPreview {
-//   description: string;
-//   button: string;
-// }
+export class ModalCardPreview<T> extends Card {
+  preview: string | null;
 
-// export class ModalCardPreview<IModalCardPreview> extends Card {
-//   protected _description: HTMLElement;
-//   protected _button: HTMLButtonElement;
+  constructor(container: HTMLElement, events: IEvents, data?: Partial<T>) {
+    super(container, events)
 
-//   constructor(container: HTMLElement, events: IEvents) {
-//     super(container, events)
-
-//     this._description = ensureElement<HTMLElement>(".card__text", container);
-//     this._button = ensureElement<HTMLButtonElement>(".button", container);
-//   }
-
-//   set description(value: string) {
-//     this.setText(this._description, value)
-//   }
+    Object.assign(this, data);
 
 
+  }
 
-// }
+  set description(value: string) {
+    this.setText(this._description, value)
+  }
+
+  setPreview(item: ICard) {
+    this.preview = item.id;
+    this.emitChanges('preview:changed', item);
+  }
+
+  // Сообщить всем что модель поменялась
+  emitChanges(event: string, payload?: object) {
+    // Состав данных можно модифицировать
+    this.events.emit(event, payload ?? {});
+  }
+
+}
