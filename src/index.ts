@@ -128,6 +128,12 @@ const modal = new Modal(modalContainer, events);
 const modalCardPreview = new ModalCardPreview(cloneTemplate(cardPreviewTemplate), events, {}); 
 
 events.on('card:select', (item: ICard) => {
-  modalCardPreview.setPreview(item);
-  console.log("007", item);
+  
+  modal.render({
+    content: modalCardPreview.render(
+    item
+  )
+});
+
+  console.log("007", modalCardPreview);
 });
