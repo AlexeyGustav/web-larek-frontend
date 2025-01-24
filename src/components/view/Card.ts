@@ -3,6 +3,10 @@ import { cloneTemplate, createElement, ensureElement } from "../../utils/utils";
 import { Component } from "../../components/base/Component";
 import { ICard } from "../../types/index";
 
+interface ICardActions {
+  onClick: (event: MouseEvent) => void;
+}
+
 export class Card  extends Component<ICard> {
   // protected itemElement: HTMLElement;
 
@@ -17,7 +21,7 @@ export class Card  extends Component<ICard> {
   protected _category?: HTMLElement;
   // protected deleteBtn?: HTMLElement;
 
-  constructor(container: HTMLElement, events: IEvents) {
+  constructor(container: HTMLElement, events: IEvents, actions?: ICardActions) {
     super(container);
     this.events = events;
 
@@ -29,18 +33,25 @@ export class Card  extends Component<ICard> {
     this._description = this.container.querySelector(".card__text");
     // this.deleteBtn = this.itemElement.querySelector(".basket__item-delete");
 
-    this.container.addEventListener("click", () => {
-      this.events.emit("card:select", { card: this.cardId })
-    });
+    // this.container.addEventListener("click", () => {
+    //   this.events.emit("card:select", { card: this.cardId })
+    // });
 
-    this.container.addEventListener("click", () => {
-      this.events.emit("cardPreview:open", { card: this })
-    });
+    // this.container.addEventListener("click", () => {
+    //   this.events.emit("cardPreview:open", { card: this })
+    // });
 
     // this.deleteBtn.addEventListener("click", () => {
     //   this.events.emit("card:delete", { card: this })
     // });
     
+    if (actions?.onClick) {
+      if (this.button) {
+          this.button.addEventListener('click', actions.onClick);
+      } else {
+          container.addEventListener('click', actions.onClick);
+      }
+  }
 
   }
 
@@ -114,9 +125,7 @@ export class ModalCardPreview<T> extends Card {
 
   }
 
-  set description(value: string) {
-    this.setText(this._description, value)
-  }
+  // set preview({})
 
   setPreview(item: ICard) {
     this.preview = item.id;

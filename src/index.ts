@@ -59,7 +59,9 @@ api.getLotList()
 
 events.on("initialData:loaded", () => {
       const renderCards = cardData.cards.map((item) => {
-      const card = new Card(cloneTemplate(cardCatalogTemplate), events);
+      const card = new Card(cloneTemplate(cardCatalogTemplate), events,
+      {onClick: () => events.emit('card:select', item)}
+    );
 
       // card.title = item.title;
       // card.category = item.category;
@@ -123,10 +125,9 @@ const modal = new Modal(modalContainer, events);
  
 // });
 
-const modalCardPreview = new ModalCardPreview(cloneTemplate(cardPreviewTemplate), events); 
+const modalCardPreview = new ModalCardPreview(cloneTemplate(cardPreviewTemplate), events, {}); 
 
 events.on('card:select', (item: ICard) => {
-  cardData.setPreview(item);
-  cardData.addCard(item);
-  console.log("007", cardData);
+  modalCardPreview.setPreview(item);
+  console.log("007", item);
 });
