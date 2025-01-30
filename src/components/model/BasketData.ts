@@ -2,6 +2,7 @@
 import { ICard, IBasketData } from '../../types/index';
 import { IEvents } from "../base/events";
 
+export type CardInfo = Pick<ICard & {index: number}, 'index'|'id'|'price'|'title'>;
 
 
 export class BasketData implements IBasketData {
@@ -51,8 +52,15 @@ export class BasketData implements IBasketData {
   };
 
   // Получить ID товара
-  getIdBasketList(): string[] {
-    return this._cards.map(card => card.id);
+  getIdBasketList(): CardInfo[] {
+    return this._cards.map((card, index) => {
+      return {
+        id: card.id,
+        title: card.title,
+        price: card.price,
+        index: index + 1
+      };
+    });
   };
 
   // Проверка наличия

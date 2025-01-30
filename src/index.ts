@@ -126,16 +126,20 @@ basketData.addCard(mokData[2])
 // Открыть корзину
 events.on('basket:open', () => {
   const arrayBasket = basketData.getIdBasketList()
+  
   arrayBasket.map(item => {
 
 
   modal.render({
     content: basketView.render({
+      // cards: item
+    
   //     cards: basketCard.render(
   //       basketData.getCard(item)
   //     )
-
-
+  //       items: basketCard.render(
+  //         basketData.getCard(item)
+  //       )
        
       })
     })
@@ -150,7 +154,7 @@ events.on('basket:changed', () => {
   // arrayBasket.map(item => {
   //   console.log(basketData.getCard(item));
   // })
-
+console.log("basketData", basketData.getIdBasketList());
   page.render({
     counter: basketData.getBasketLength()
   })

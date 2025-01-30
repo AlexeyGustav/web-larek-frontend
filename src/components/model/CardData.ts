@@ -4,7 +4,6 @@ import { IEvents } from "../base/events";
 // TODO: добавить интерфейс в типы и ридми
 export interface ICardsData {
 	cards: ICard[];
-
 }
 
 export class CardData implements ICardsData {
