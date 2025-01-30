@@ -155,6 +155,6 @@ export class ModalCardBasket extends Card {
   }
 
   set basketIndex(index: number) {
-    this.setText(this._basketIndex,index++);
+    this.setText(this._basketIndex, index++);
   }
 }

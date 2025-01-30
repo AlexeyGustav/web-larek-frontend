@@ -132,13 +132,13 @@ events.on('basket:open', () => {
 
   modal.render({
     content: basketView.render({
-      cards: arrayBasket.map((card, index) => {
+      cards: arrayBasket.map((card) => {
         return basketCard.render(card)
       }),
       total: basketData.getTotal()
     })
   })
-})
+});
 
 
 
