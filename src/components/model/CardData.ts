@@ -1,23 +1,15 @@
 import { ICard } from "../../types/index";
 import { IEvents } from "../base/events";
 
-interface ICardsData {
+// TODO: добавить интерфейс в типы и ридми
+export interface ICardsData {
 	cards: ICard[];
-	addCard(card: ICard): void;
-	deleteCard(cardId: string): void;
-	getCard(cardId: string): ICard;
-    setPreview(item: ICard): void;
+
 }
-// export interface ICardData {
-//     cards: ICard[];
-//     getCard(cardId:string): ICard;
-//     getSelected(): void;
-//     setSelected(cardId:string): void;
-// }
+
 export class CardData implements ICardsData {
     protected _cards: ICard[];
     protected events: IEvents;
-    protected _selectCardId: string | null;
 
 
     constructor(events: IEvents) {
@@ -26,40 +18,11 @@ export class CardData implements ICardsData {
     
     set cards(cards:ICard[]) {
         this._cards = cards;
-        this.events.emit('cards:changed')
+        this.events.emit('basket:changed')
     }
 
     get cards() {
         return this._cards;
-    }
-
-    addCard(card: ICard) {
-        this._cards = [card, ...this._cards]
-        this.events.emit('cards:changed')
-    }
-
-    deleteCard(cardId: string) {
-        this._cards = this._cards.filter(card => card.id !== cardId);
-
-    }
-
-    getCard(cardId: string) {
-        return this._cards.find((item) => item.id === cardId)
-    }
-
-    // Получить карточки Selected
-    getSelected(): ICard {
-        return this._cards.find(card => card.id === this._selectCardId)!;
-    };
-
-    // Передать карточки Selected
-    // setSelected(cardId: string): void {
-    //     this._selectCardId = cardId;
-    // };
-
-    setPreview(item: ICard): void {
-        this._selectCardId = item.id;
-        // this.emitChanges('preview:changed', item);
     }
 
 }

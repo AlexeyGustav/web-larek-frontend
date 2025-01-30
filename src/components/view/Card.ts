@@ -1,4 +1,4 @@
-import { EventEmitter, IEvents } from "../../components/base/events";
+import { IEvents } from "../../components/base/events";
 import { cloneTemplate, createElement, ensureElement } from "../../utils/utils";
 import { Component } from "../../components/base/Component";
 import { ICard } from "../../types/index";
@@ -12,14 +12,12 @@ export class Card  extends Component<ICard> {
 
 
   protected events: IEvents;
-  protected _description?: HTMLElement;
   protected _title: HTMLElement;
   protected cardId: string;
   protected _image?: HTMLImageElement;
   protected button?: HTMLButtonElement;
   protected _price: HTMLElement;
   protected _category?: HTMLElement;
-  // protected deleteBtn?: HTMLElement;
 
   constructor(container: HTMLElement, events: IEvents, actions?: ICardActions) {
     super(container);
@@ -30,7 +28,11 @@ export class Card  extends Component<ICard> {
     this._price = this.container.querySelector(".card__price");
     this._category = this.container.querySelector(".card__category");
     this.button = this.container.firstElementChild.querySelector(".gallery__item");
-    this._description = this.container.querySelector(".card__text");
+
+
+
+
+ 
     // this.deleteBtn = this.itemElement.querySelector(".basket__item-delete");
 
     // this.container.addEventListener("click", () => {
@@ -71,8 +73,9 @@ export class Card  extends Component<ICard> {
     this.setText(this._price, `${value + " синапсов"}`)
 
     if(value === null) {
-      this._price.textContent = "Бесценно"
-    }
+      this._price.textContent = "Бесценно";
+    }  
+
   }
 
   set category(value: string) {
@@ -91,18 +94,15 @@ export class Card  extends Component<ICard> {
       case "хард-скил":
         this._category.style.background = "#FAA083"
         break
+      case "софт-скил":
+        this._category.style.background = "#83FA9D"
+        break
     }
   }
 
   set image(link: string) {
     this.setImage(this._image, link)
   }
-
-  set description(description: string) {
-    if (this._description) {
-        this.setText( this._description, description);
-    }
-}
 
 
   // deleteCard() {
@@ -113,29 +113,48 @@ export class Card  extends Component<ICard> {
 }
 
 // Отображение карточки в модальном окне
-
 export class ModalCardPreview<T> extends Card {
-  preview: string | null;
+  protected _description: HTMLElement;
+  protected disableBtn?: HTMLButtonElement;
 
-  constructor(container: HTMLElement, events: IEvents, data?: Partial<T>) {
+
+  constructor(container: HTMLElement, events: IEvents) {
     super(container, events)
 
-    Object.assign(this, data);
-
+    this._description = this.container.querySelector(".card__text");
+    this.disableBtn = ensureElement(".card__button", this.container) as HTMLButtonElement;
 
   }
 
-  // set preview({})
-
-  setPreview(item: ICard) {
-    this.preview = item.id;
-    this.emitChanges('preview:changed', item);
+  set description(description: string) {
+    if (this._description) {
+        this.setText( this._description, description);
+    }
+  }
+  
+  getDisabled(card: ICard) {
+    if(card.price === null) {
+      this.disableBtn.disabled = true
+    } else {
+      this.disableBtn.disabled = false
+    }
   }
 
-  // Сообщить всем что модель поменялась
-  emitChanges(event: string, payload?: object) {
-    // Состав данных можно модифицировать
-    this.events.emit(event, payload ?? {});
+}
+
+// Отображение карточки в корзине
+export class ModalCardBasket extends Card {
+  protected _basketIndex: HTMLElement;
+  protected basketIndexDelete: HTMLButtonElement;
+
+  constructor(container: HTMLElement, events: IEvents) {
+    super(container, events);
+
+    this._basketIndex = this.container.querySelector(".basket__item-index");
+    this.basketIndexDelete = this.container.querySelector(".basket__item-delete") as HTMLButtonElement;
   }
 
+  set basketIndex(index: number) {
+    this.setText(this._basketIndex,index++);
+  }
 }

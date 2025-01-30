@@ -1,7 +1,7 @@
 import { Api, ApiListResponse } from '../base/api';
 import { ICard } from '../../types/index';
 
-export interface IAuctionAPI {
+export interface ICoursesAPI {
   cdn: string;
   getLotList: () => Promise<ICard[]>;
   // getLotItem: (id: string) => Promise<ILotItem>;
@@ -10,7 +10,7 @@ export interface IAuctionAPI {
   // orderLots: (order: IOrder) => Promise<IOrderResult>;
 }
 
-export class AuctionAPI extends Api implements IAuctionAPI{
+export class CoursesAPI extends Api implements ICoursesAPI{
   readonly cdn;
 
   constructor(cdn: string, baseUrl: string, options?: RequestInit) {

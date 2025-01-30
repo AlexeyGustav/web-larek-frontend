@@ -1,6 +1,4 @@
-interface ICardsContainer {
-  catalog: HTMLElement[] | HTMLElement;
-}
+import {ICardsContainer} from "../../types/index";
 
 export class CardsContainer {
   protected _catalog: HTMLElement[];

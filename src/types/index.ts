@@ -1,29 +1,58 @@
-export type LotStatus = 'wait' | 'active' | 'closed';
+// export type LotStatus = 'wait' | 'active' | 'closed';
 
-// export interface IAuction {
-//   status: LotStatus;
-//   datetime: string;
-//   price: number;
-//   minPrice: number;
-//   history?: number[];
-// }
-
-// export type ILot = ILotItem & IAuction;
 
 export interface ICard {
   id: string;
   title: string;
   price: number | null;
   description?: string;
-  image: string;
-  category: string;
+  image?: string;
+  category?: string;
 }
 
-export interface IDataCard {
-  items: ICard[];
-  previewCard: ICard;
-  selectСard(item: ICard): void;
+export interface IModalData {
+  content: HTMLElement;
 }
+
+export interface ICardsContainer {
+  catalog: HTMLElement[] | HTMLElement;
+}
+
+export interface IBasketData {
+  cards: ICard[];
+  total: number;
+  // addCard(card: ICard): void;
+  // deleteCard(cardId: string): void;
+  // getCard(cardId: string): ICard;
+  // getBasketLength(): number;
+  // getTotal(): number;
+  // getIdBasketList(): string[];
+  // contains(id: string): boolean;
+  // clear(): void;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// export interface IDataCard {
+//   items: ICard[];
+//   previewCard: ICard;
+//   selectСard(item: ICard): void;
+// }
 
 // export type TCard = Pick<ICard, "id" | "price">
 
@@ -36,15 +65,7 @@ export interface IBasketOrdered {
   total: number;
 }
 
-export interface IBasket {
-  productsList: ICard[];
-  payment: string;
-  getSumProductsList: () => number;
-  setToSelectСard(data: ICard): void;
-  getToCounterCards: () => number;
-  delToSelectСard(item: ICard): void;
-  clearBasket(): void
-}
+
 
 export interface IOrder {
   _id: string;
