@@ -127,30 +127,19 @@ const basketCard = new ModalCardBasket(cloneTemplate(cardBasketTemplate), events
 // Открыть корзину
 events.on('basket:open', () => {
   
-  // const arrayBasket = basketData.getIdBasketList();
-  // console.log('arrayBasket: ', arrayBasket);
+  const arrayBasket = basketData.getIdBasketList();
+  console.log('arrayBasket: ', arrayBasket);
 
   modal.render({
-    content: basketView.render()
-
-
-
-
-
-    // content: arrayBasket.map((card, index) => {
-    // return basketCard.render(card)
-  
-  
-  
-  
-    
-      // content: cardItem.render(card)
-    
-    
+    content: basketView.render({
+      cards: arrayBasket.map((card, index) => {
+        return basketCard.render(card)
+      }),
+      total: basketData.getTotal()
+    })
   })
 })
 
-// });
 
 
 // Изменения в корзине
