@@ -131,9 +131,9 @@ events.on('basket:open', () => {
 
   modal.render({
     content: basketView.render({
-      cards: basketCard.render(
-        basketData.getCard(item)
-      )
+  //     cards: basketCard.render(
+  //       basketData.getCard(item)
+  //     )
 
 
        
