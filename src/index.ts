@@ -39,7 +39,6 @@ const events = new EventEmitter();
 const cardContainer = new CardsContainer(document.querySelector(".gallery"));
 const cardData = new CardData(events);
 const basketData = new BasketData(events);
-const basketCard = new ModalCardBasket(cloneTemplate(cardBasketTemplate), events)
 const basketView = new Basket(cloneTemplate(basketTemplate), events);
 
 
@@ -117,35 +116,41 @@ basketData.addCard(mokData[2])
 // console.log(basketData.getCard("854cef69-976d-4c2a-a18c-2aa45046c390"));
 // console.log('basketData: ', basketData.clear());
 // console.log('getTotal: ', basketData.getTotal());
-// console.log('11111111111: ', basketData.total);
+console.log('11111111111: ', basketView);
 
 // basketCard.render()
 // console.log('basketView.totalPrice: ', basketView.totalPrice);
+const basketCard = new ModalCardBasket(cloneTemplate(cardBasketTemplate), events)
+
 
 // Корзина
 // Открыть корзину
 events.on('basket:open', () => {
-  const arrayBasket = basketData.getIdBasketList()
   
-  arrayBasket.map(item => {
-
+  // const arrayBasket = basketData.getIdBasketList();
+  // console.log('arrayBasket: ', arrayBasket);
 
   modal.render({
-    content: basketView.render({
-      // cards: item
-    
-  //     cards: basketCard.render(
-  //       basketData.getCard(item)
-  //     )
-  //       items: basketCard.render(
-  //         basketData.getCard(item)
-  //       )
-       
-      })
-    })
-  });
+    content: basketView.render()
 
+
+
+
+
+    // content: arrayBasket.map((card, index) => {
+    // return basketCard.render(card)
+  
+  
+  
+  
+    
+      // content: cardItem.render(card)
+    
+    
+  })
 })
+
+// });
 
 
 // Изменения в корзине

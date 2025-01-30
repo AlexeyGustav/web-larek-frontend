@@ -11,7 +11,7 @@ export interface ICard {
 }
 
 export interface IModalData {
-  content: HTMLElement;
+  content: HTMLElement | HTMLElement[];
 }
 
 export interface ICardsContainer {
