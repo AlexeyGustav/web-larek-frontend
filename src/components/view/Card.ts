@@ -39,9 +39,7 @@ export class Card  extends Component<ICard> {
     //   this.events.emit("card:select", { card: this.cardId })
     // });
 
-    // this.container.addEventListener("click", () => {
-    //   this.events.emit("cardPreview:open", { card: this })
-    // });
+
 
     // this.deleteBtn.addEventListener("click", () => {
     //   this.events.emit("card:delete", { card: this })
@@ -53,7 +51,7 @@ export class Card  extends Component<ICard> {
       } else {
           container.addEventListener('click', actions.onClick);
       }
-  }
+    }
 
   }
 
@@ -115,28 +113,52 @@ export class Card  extends Component<ICard> {
 // Отображение карточки в модальном окне
 export class ModalCardPreview<T> extends Card {
   protected _description: HTMLElement;
-  protected disableBtn?: HTMLButtonElement;
+  protected buyBtn?: HTMLButtonElement;
 
 
-  constructor(container: HTMLElement, events: IEvents) {
+  constructor(container: HTMLElement, events: IEvents, actions?: ICardActions) {
     super(container, events)
 
     this._description = this.container.querySelector(".card__text");
-    this.disableBtn = ensureElement(".card__button", this.container) as HTMLButtonElement;
+    this.buyBtn = ensureElement(".card__button", this.container) as HTMLButtonElement;
+
+    // if (this.buyBtn) {
+    //   this.buyBtn.addEventListener("click", () => {
+    //     this.events.emit("modalCard:changed", (event: MouseEvent) => {
+    //       actions?.onClick?.(event);
+    //     })
+    //   });
+
+    // }
+    if (this.buyBtn) {
+      this.buyBtn.addEventListener("click", () => {
+            this.events.emit("modalCard:changed", () => {
+              
+            })
+          });
+    }
+
+    // if (actions?.onClick) {
+    //   if (this.button) {
+    //       this.button.addEventListener('click', actions.onClick);
+    //   } else {
+    //       container.addEventListener('click', actions.onClick);
+    //   }
+    // }
 
   }
 
   set description(description: string) {
     if (this._description) {
-        this.setText( this._description, description);
+      this.setText(this._description, description);
     }
   }
-  
+
   getDisabled(card: ICard) {
-    if(card.price === null) {
-      this.disableBtn.disabled = true
+    if (card.price === null) {
+      this.buyBtn.disabled = true
     } else {
-      this.disableBtn.disabled = false
+      this.buyBtn.disabled = false
     }
   }
 

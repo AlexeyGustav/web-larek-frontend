@@ -17,7 +17,6 @@ export class CardData implements ICardsData {
     
     set cards(cards:ICard[]) {
         this._cards = cards;
-        this.events.emit('basket:changed')
     }
 
     get cards() {

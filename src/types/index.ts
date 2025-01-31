@@ -19,7 +19,7 @@ export interface ICardsContainer {
 }
 
 export interface IBasketData {
-  cards: ICard[] | HTMLElement[];
+  cards: ICard[];
   total: number;
   // addCard(card: ICard): void;
   // deleteCard(cardId: string): void;

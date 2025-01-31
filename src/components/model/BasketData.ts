@@ -6,8 +6,9 @@ export type CardInfo = Pick<ICard & {index: number}, 'index'|'id'|'price'|'title
 
 
 export class BasketData implements IBasketData {
+  protected _id: string;
   protected _cards: ICard[] = [];
-  protected _total: number;
+
 
   constructor(protected events: IEvents) {
 
@@ -30,6 +31,7 @@ export class BasketData implements IBasketData {
   // Удалить товар
   deleteCard(cardId: string) {
     this._cards = this.cards.filter(card => card.id !== cardId);
+    this.events.emit('basket:changed')
   }
 
   // Отдать массив
@@ -51,7 +53,7 @@ export class BasketData implements IBasketData {
     };
   };
 
-  // Получить ID товара
+  // Получить товар
   getIdBasketList(): CardInfo[] {
     return this._cards.map((card, index) => {
       return {
