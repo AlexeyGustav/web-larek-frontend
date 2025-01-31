@@ -103,10 +103,7 @@ export class Card  extends Component<ICard> {
   }
 
 
-  // deleteCard() {
-  //   this.itemElement.remove();
-  //   this.itemElement = null;
-  // }
+
 
 }
 
@@ -174,6 +171,10 @@ export class ModalCardBasket extends Card {
 
     this._basketIndex = this.container.querySelector(".basket__item-index");
     this.basketIndexDelete = this.container.querySelector(".basket__item-delete") as HTMLButtonElement;
+
+    this.basketIndexDelete.addEventListener('click', () => {
+      events.emit('delete:card', { card: this.cardId });
+    });
   }
 
   set basketIndex(index: number) {

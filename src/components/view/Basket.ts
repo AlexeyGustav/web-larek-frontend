@@ -45,32 +45,6 @@ export class Basket extends Component<IBasket> {
   }
 
   set totalPrice(total: number) {
-    this.setText(this.basketTotalPrice, formatNumber(total));
+    this.setText(this.basketTotalPrice, `${formatNumber(total)} синапсов`);
   }
-
-  // set cardListBasket(value: HTMLElement[]) {
-  //   this.items = value;
-  // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // set selected(items: string[]) {
-  //   if (items.length) {
-  //     this.setDisabled(this.basketButton, false);
-  //   } else {
-  //     this.setDisabled(this.basketButton, true);
-  //   }
-  // }
-
 }

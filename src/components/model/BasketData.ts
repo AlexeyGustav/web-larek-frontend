@@ -4,7 +4,6 @@ import { IEvents } from "../base/events";
 
 export type CardInfo = Pick<ICard & {index: number}, 'index'|'id'|'price'|'title'>;
 
-
 export class BasketData implements IBasketData {
   protected _id: string;
   protected _cards: ICard[] = [];
@@ -13,6 +12,7 @@ export class BasketData implements IBasketData {
   constructor(protected events: IEvents) {
 
   }
+
 
   get cards(): ICard[] {
     return this._cards;
