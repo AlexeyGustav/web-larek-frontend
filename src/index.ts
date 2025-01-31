@@ -134,42 +134,6 @@ const basketCard = new ModalCardBasket(cloneTemplate(cardBasketTemplate), events
 // Корзина
 // Изменения в корзине
 events.on('basket:changed', () => {
-  // console.log("CHANGED", basketData.getIdBasketList());
-
-  basketView.render({
-    items: basketData.getIdBasketList().map((card, index, array) => {
-      return basketCard.render(card)
-    }),
-    // totalPrice: basketData.getTotal()
-  })
-
-  page.render({
-    counter: basketData.getBasketLength()
-  })
-
-
-})
-
-// Открыть корзину
-// events.on('basket:open', () => {
-
-//   const itemsContent = basketData.getIdBasketList().map((card, index, array) => {
-//     return basketCard.render(card)
-//   })
-//   console.log('itemsContent: ', itemsContent);
-
-//   modal.render({
-//     content: basketView.render({
-//       items: itemsContent,
-//       totalPrice: basketData.getTotal()
-//     })
-
-//   })
-// });
-
-
-
-events.on('basket:open', () => {
   const itemsContent = basketData.getIdBasketList().map((card, index) => {
     console.log(`Rendering card ${index}:`, card);
     return basketCard.render(card); // Передаем индекс карточки
@@ -188,6 +152,15 @@ events.on('basket:open', () => {
     items: itemsContent,
     totalPrice: basketData.getTotal()
   }));
+
+})
+
+
+
+events.on('basket:open', () => {
+  modal.render({
+    content: basketView.render()
+  })
 });
 
 
