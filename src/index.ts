@@ -58,18 +58,12 @@ events.onAll((event) => {
 api.getLotList()
   .then((data) => {
     cardData.cards = data;
-    events.emit("initialData:loaded");
-  })
-  .catch(err => {
-    console.error(err);
-});
 
-events.on("initialData:loaded", () => {
-      const renderCards = cardData.cards.map((item) => {
+    const renderCards = cardData.cards.map((item) => {
       const card = new Card(cloneTemplate(cardCatalogTemplate), events,
-      { onClick: () => events.emit('card:select', item) }
-    );
-
+        { onClick: () => events.emit('card:select', item) }
+      );
+  
       return card.render({
         id: item.id,
         title: item.title,
@@ -77,24 +71,18 @@ events.on("initialData:loaded", () => {
         category: item.category,
         price: item.price
       });
+  
+    });
 
-    })
     cardContainer.render({ catalog: renderCards });
+  })
+  .catch(err => {
+    console.error(err);
 });
 
 
 // Открыть модальное окно с карточкой товара
 events.on('card:select', (item: ICard) => {
-
-  events.on('modalCard:changed', () => {
-    const cardBasket = basketData.contains(item.id);
-
-    if (!cardBasket) {
-      basketData.addCard(item)
-    }
-
-    modal.close()
-  });
 
   modal.render({
     content: modalCardPreview.render(
@@ -116,7 +104,19 @@ events.on('modal:close', () => {
 });
 
 
+events.on('modalCard:changed', (item: { card: string }) => {
+  console.log('modalCard:changed', item);
+  const cardBasket = basketData.contains(item.card);
+  const selectCard = basketData.getCard(item.card);
+  console.log('selectCard: ', selectCard);
+  console.log("TODO Доделать событие добавления карточки");
 
+  if (!cardBasket) {
+    // basketData.addCard(item.card)
+  }
+
+  modal.close()
+});
 
 
 
@@ -125,15 +125,8 @@ events.on('modal:close', () => {
 // basketData.addCard(mokData[0])
 // basketData.addCard(mokData[1])
 // basketData.addCard(mokData[3])
-// console.log('basketData: ', basketData);
-// basketData.deleteCard(mokData[0].id)
-// console.log('basketData: ', basketData.getBasketLength());
 // console.log('getIdBasketList: ', basketData.getIdBasketList());
-// console.log('getIdBasketList: ', basketData.contains("854cef69-976d-4c2a-a18c-2aa45046c390"));
-// c onsole.log(basketData.getCard("854cef69-976d-4c2a-a18c-2aa45046c390"));
-// console.log('basketData: ', basketData.clear());
-// console.log('getTotal: ', basketData.getTotal());
-// console.log('11111111111: ', basketView);
+
 
 const basketCard = new ModalCardBasket(cloneTemplate(cardBasketTemplate), events)
 
@@ -142,7 +135,7 @@ const basketCard = new ModalCardBasket(cloneTemplate(cardBasketTemplate), events
 // Изменения в корзине
 events.on('basket:changed', () => {
   // console.log("CHANGED", basketData.getIdBasketList());
-  
+
   basketView.render({
     items: basketData.getIdBasketList().map((card, index, array) => {
       return basketCard.render(card)
@@ -158,29 +151,61 @@ events.on('basket:changed', () => {
 })
 
 // Открыть корзину
-events.on('basket:open', () => {
+// events.on('basket:open', () => {
 
-  const itemsContent = basketData.getIdBasketList().map((card, index, array) => {
-    return basketCard.render(card)
-  })
-  console.log('itemsContent: ', itemsContent);
+//   const itemsContent = basketData.getIdBasketList().map((card, index, array) => {
+//     return basketCard.render(card)
+//   })
+//   console.log('itemsContent: ', itemsContent);
+
+//   modal.render({
+//     content: basketView.render({
+//       items: itemsContent,
+//       totalPrice: basketData.getTotal()
+//     })
+
+//   })
+// });
+
+
+
+events.on('basket:open', () => {
+  const itemsContent = basketData.getIdBasketList().map((card, index) => {
+    console.log(`Rendering card ${index}:`, card);
+    return basketCard.render(card); // Передаем индекс карточки
+  });
+  basketView.items = itemsContent
+  console.log("Items Content:", itemsContent);
 
   modal.render({
     content: basketView.render({
       items: itemsContent,
       totalPrice: basketData.getTotal()
     })
-    // content: basketView.render({
-    //   items: basketData.getIdBasketList().map((card) => {
-    //     return basketCard.render(card)
-    //   }),
-    //   totalPrice: basketData.getTotal()
-    // })
+  });
 
-  })
+  console.log(basketView.render({
+    items: itemsContent,
+    totalPrice: basketData.getTotal()
+  }));
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 events.on('delete:card', (id: { card: string }) => {
   basketData.deleteCard(id.card)
   // console.log("DELETE", basketData.getIdBasketList());
 });
+
+

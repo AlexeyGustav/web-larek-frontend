@@ -11,7 +11,6 @@ export interface IBasket {
 
 export class Basket extends Component<IBasket> {
   protected events: IEvents;
-  protected basketTitle: HTMLElement;
   protected _basketButton: HTMLButtonElement;
   protected basketTotalPrice: HTMLElement;
   protected _list: HTMLElement;
@@ -21,7 +20,7 @@ export class Basket extends Component<IBasket> {
 
     this._basketButton = this.container.querySelector(".basket__button") as HTMLButtonElement;
     this.basketTotalPrice = this.container.querySelector(".basket__price");
-    this._list = this.container.querySelector(".basket__list");
+    this._list = ensureElement(".basket__list", this.container);
 
     if (this._basketButton) {
       this._basketButton.addEventListener('click', () => {
