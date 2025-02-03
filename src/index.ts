@@ -8,7 +8,7 @@ import { API_URL, CDN_URL, settings } from "./utils/constants";
 import { CoursesAPI } from "./components/model/ActionApi";
 import { Card, ModalCardPreview, ModalCardBasket } from "./components/view/Card";
 import { cloneTemplate, createElement, ensureElement } from "./utils/utils";
-import { ICard } from "./types/index";
+import { ICard, IBasketData } from "./types/index";
 import { CardsContainer } from "./components/view/CardsContainer";
 import { Modal } from "./components/view/Modal";
 import { Page } from "./components/view/Page";
@@ -104,15 +104,22 @@ events.on('modal:close', () => {
 });
 
 interface ModalCardItem {
-  card: string; // или другой тип, если необходимо
+  cardId: string; // или другой тип, если необходимо
   // другие свойства...
-  cardId: string;
 }
 
+// export interface IBasketData {
+//   cards: ICard[] | ICard;
+//   total: number;
+//   addCard(card: ICard): void;
 
-events.on('modalCard:changed', (item: ModalCardItem) => {
-  console.log('cardBasket: ', item);
-  console.log('modalCard:changed', item.card);
+// }
+
+events.on('modalCard:changed', (cards: { cardId: string }) => {
+  console.log('cardBasket!!!!!!!!!!: ', );
+  const basketCard = basketData.contains(cards.cardId);
+  const selectCard = cardData.getCard(cards.cardId);
+  console.log('selectCard: ', selectCard);
 
 
 
@@ -122,10 +129,13 @@ events.on('modalCard:changed', (item: ModalCardItem) => {
   // const selectCard = basketData.getCard(item.card);
 
 
-  // if (!cardBasket) {
-  //   basketData.addCard(item.card)
-  // }
+  if (!basketCard) {
+    basketData.addCard(selectCard)
+  }
 
+  console.log('basketData: ', basketData);
+  // const itemsContent = basketData.getIdBasketList()
+  // console.log('itemsContent: ', itemsContent);
   modal.close()
 });
 
@@ -145,24 +155,24 @@ const basketCard = new ModalCardBasket(cloneTemplate(cardBasketTemplate), events
 // Корзина
 // Изменения в корзине
 events.on('basket:changed', () => {
-  const itemsContent = basketData.getIdBasketList().map((card, index) => {
-    console.log(`Rendering card ${index}:`, card);
-    return basketCard.render(card); // Передаем индекс карточки
-  });
-  basketView.items = itemsContent
-  console.log("Items Content:", itemsContent);
+  // const itemsContent = basketData.getIdBasketList().map((card, index) => {
+  //   console.log(`Rendering card ${index}:`, card);
+  //   return basketCard.render(card); // Передаем индекс карточки
+  // });
+  // basketView.items = itemsContent
+  // console.log("Items Content:", itemsContent);
 
-  modal.render({
-    content: basketView.render({
-      items: itemsContent,
-      totalPrice: basketData.getTotal()
-    })
-  });
+  // modal.render({
+  //   content: basketView.render({
+  //     items: itemsContent,
+  //     totalPrice: basketData.getTotal()
+  //   })
+  // });
 
-  console.log(basketView.render({
-    items: itemsContent,
-    totalPrice: basketData.getTotal()
-  }));
+  // console.log(basketView.render({
+  //   items: itemsContent,
+  //   totalPrice: basketData.getTotal()
+  // }));
 
 })
 

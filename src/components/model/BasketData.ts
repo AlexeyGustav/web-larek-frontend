@@ -5,7 +5,7 @@ import { IEvents } from "../base/events";
 export type CardInfo = Pick<ICard & {index: number}, 'index'|'id'|'price'|'title'>;
 
 export class BasketData implements IBasketData {
-  protected _id: string;
+  // protected _id: string;
   protected _cards: ICard[] = [];
 
   constructor(protected events: IEvents) {}
@@ -30,10 +30,7 @@ export class BasketData implements IBasketData {
     this.events.emit('basket:changed')
   }
 
-  // Отдать массив
-  getCard(cardId: string) {
-    return this.cards.find((item) => item.id === cardId)
-  }
+
 
   // Получить количество товаров
   getBasketLength(): number {

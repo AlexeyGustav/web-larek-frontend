@@ -129,7 +129,7 @@ export class ModalCardPreview<T> extends Card {
     // }
     if (this.buyBtn) {
       this.buyBtn.addEventListener("click", () => {
-            this.events.emit("modalCard:changed", { card: this})
+            this.events.emit("modalCard:changed", { card: this.cardId})
           });
     }
 
