@@ -4,13 +4,14 @@ import { IEvents } from "../base/events";
 // TODO: добавить интерфейс в типы и ридми
 export interface ICardsData {
 	cards: ICard[];
-  getCard(cardId: string): ICard;
+  getCard(cardId: string): ICard | ICard[];
 
 }
 
 export class CardData implements ICardsData {
     protected _cards: ICard[];
     protected events: IEvents;
+    protected _selectCardId: string | null;
 
 
     constructor(events: IEvents) {
@@ -25,9 +26,14 @@ export class CardData implements ICardsData {
         return this._cards;
     }
 
-      // Отдать массив
-  getCard(cardId: string) {
-    return this.cards.find((item) => item.id === cardId)
+  // Отдать массив
+  getCard(cardId: string): ICard {
+    return this._cards.find((item) => item.id === cardId)
   }
+
+      // Передать карточки Selected
+    //   setSelected(cardId: string): void {
+    //     this._selectCardId = cardId;
+    //   };
 
 }

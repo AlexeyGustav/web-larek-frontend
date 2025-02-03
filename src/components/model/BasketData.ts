@@ -32,6 +32,7 @@ export class BasketData implements IBasketData {
 
 
 
+
   // Получить количество товаров
   getBasketLength(): number {
     return this._cards.length ?? 0;

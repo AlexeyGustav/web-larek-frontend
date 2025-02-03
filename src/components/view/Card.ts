@@ -119,27 +119,22 @@ export class ModalCardPreview<T> extends Card {
     this._description = this.container.querySelector(".card__text");
     this.buyBtn = ensureElement(".card__button", this.container) as HTMLButtonElement;
 
+    // }
     // if (this.buyBtn) {
     //   this.buyBtn.addEventListener("click", () => {
-    //     this.events.emit("modalCard:changed", (event: MouseEvent) => {
-    //       actions?.onClick?.(event);
-    //     })
-    //   });
-
+    //         this.events.emit("modalCard:changed", { card: this.cardId})
+    //       });
     // }
-    if (this.buyBtn) {
-      this.buyBtn.addEventListener("click", () => {
-            this.events.emit("modalCard:changed", { card: this.cardId})
-          });
-    }
 
-    // if (actions?.onClick) {
-    //   if (this.button) {
-    //       this.button.addEventListener('click', actions.onClick);
-    //   } else {
+    if (actions?.onClick) {
+      if (this.buyBtn) {
+          this.buyBtn.addEventListener('click', actions.onClick);
+        } 
+    //     else {
     //       container.addEventListener('click', actions.onClick);
-    //   }
+    //       this.toggleClass(this.buyBtn, "delete")
     // }
+    }
 
   }
 
@@ -156,6 +151,14 @@ export class ModalCardPreview<T> extends Card {
       this.buyBtn.disabled = false
     }
   }
+
+  replaceTextBtn(value: boolean) {
+    if (value) {
+      this.setText(this.buyBtn, "В корзину");
+    } else {
+      this.setText(this.buyBtn, "Удалить из корзины");
+    }
+}
 
 }
 

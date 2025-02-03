@@ -83,6 +83,7 @@ api.getLotList()
 
 // Открыть модальное окно с карточкой товара
 events.on('card:select', (item: ICard) => {
+  const modalCardPreview = new ModalCardPreview(cloneTemplate(cardPreviewTemplate), events, { onClick: () => events.emit('modalCard:changed', item) });
 
   modal.render({
     content: modalCardPreview.render(
@@ -91,53 +92,41 @@ events.on('card:select', (item: ICard) => {
   });
 
   modalCardPreview.getDisabled(item)
+
 });
 
-// Блокируем прокрутку страницы если открыта модалка
-events.on('modal:open', () => {
-  page.locked = true;
-});
+events.on('modalCard:changed', (item: ICard) => {
+  const selectCard = cardData.getCard(item.id);
+  const cardBasket = basketData.contains(item.id)
 
-// ... и разблокируем
-events.on('modal:close', () => {
-  page.locked = false;
-});
-
-interface ModalCardItem {
-  cardId: string; // или другой тип, если необходимо
-  // другие свойства...
-}
-
-// export interface IBasketData {
-//   cards: ICard[] | ICard;
-//   total: number;
-//   addCard(card: ICard): void;
-
-// }
-
-events.on('modalCard:changed', (cards: { cardId: string }) => {
-  console.log('cardBasket!!!!!!!!!!: ', );
-  const basketCard = basketData.contains(cards.cardId);
-  const selectCard = cardData.getCard(cards.cardId);
-  console.log('selectCard: ', selectCard);
-
-
-
-
-  
-  // const cardBasket = basketData.addCard(item.card);
-  // const selectCard = basketData.getCard(item.card);
-
-
-  if (!basketCard) {
+  if (!cardBasket) {
     basketData.addCard(selectCard)
-  }
+    modalCardPreview.replaceTextBtn(false);
+    console.log("00000", basketData);
+  } 
 
-  console.log('basketData: ', basketData);
-  // const itemsContent = basketData.getIdBasketList()
-  // console.log('itemsContent: ', itemsContent);
-  modal.close()
+  modal.render({
+    content: modalCardPreview.render(
+      item
+    )
+  });
+
 });
+
+
+
+// events.on('modalCard:changed', (cards: { cardId: string }) => {
+//   const basketCard = basketData.contains(cards.cardId);
+//   const card = new Card(cloneTemplate(cardCatalogTemplate), events,);
+//   const selectCard = cardData.getCard(cards.cardId);
+//   cardData.setSelected(selectCard.id);
+//   console.log('cardBasket!!!!!!!!!!: ', cards);
+
+
+
+
+
+
 
 
 
@@ -198,8 +187,22 @@ events.on('basket:open', () => {
 
 
 events.on('delete:card', (id: { card: string }) => {
-  basketData.deleteCard(id.card)
+  // basketData.deleteCard(id.card)
+  // console.log('basketData: ', basketData);
   // console.log("DELETE", basketData.getIdBasketList());
+
+
 });
 
 
+
+
+// Блокируем прокрутку страницы если открыта модалка
+events.on('modal:open', () => {
+  page.locked = true;
+});
+
+// ... и разблокируем
+events.on('modal:close', () => {
+  page.locked = false;
+});
