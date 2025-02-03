@@ -8,11 +8,7 @@ export class BasketData implements IBasketData {
   protected _id: string;
   protected _cards: ICard[] = [];
 
-
-  constructor(protected events: IEvents) {
-
-  }
-
+  constructor(protected events: IEvents) {}
 
   get cards(): ICard[] {
     return this._cards;

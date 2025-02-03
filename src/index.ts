@@ -103,17 +103,28 @@ events.on('modal:close', () => {
   page.locked = false;
 });
 
+interface ModalCardItem {
+  card: string; // или другой тип, если необходимо
+  // другие свойства...
+  cardId: string;
+}
 
-events.on('modalCard:changed', (item: { card: string }) => {
-  console.log('modalCard:changed', item);
-  const cardBasket = basketData.contains(item.card);
-  const selectCard = basketData.getCard(item.card);
-  console.log('selectCard: ', selectCard);
-  console.log("TODO Доделать событие добавления карточки");
 
-  if (!cardBasket) {
-    // basketData.addCard(item.card)
-  }
+events.on('modalCard:changed', (item: ModalCardItem) => {
+  console.log('cardBasket: ', item);
+  console.log('modalCard:changed', item.card);
+
+
+
+
+  
+  // const cardBasket = basketData.addCard(item.card);
+  // const selectCard = basketData.getCard(item.card);
+
+
+  // if (!cardBasket) {
+  //   basketData.addCard(item.card)
+  // }
 
   modal.close()
 });
