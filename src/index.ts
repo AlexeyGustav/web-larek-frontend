@@ -140,17 +140,15 @@ events.on('basket:changed', () => {
       id: card.id,
       title: card.title,
       price: card.price,
-        // basketIndex: index + 1,
+      // basketIndex: index + 1,
     });
   })
   console.log("Items Content:", itemsContent);
 
-  // modal.render({
-  //   content: basketView.render({
-  //     items: itemsContent,
-  //     totalPrice: basketData.total,
-  //   })
-  // })
+  basketView.render({
+    items: itemsContent,
+    totalPrice: basketData.total,
+  })
 
 })
 
