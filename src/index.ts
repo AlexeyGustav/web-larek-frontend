@@ -96,27 +96,32 @@ events.on('card:select', (item: ICard) => {
 });
 
 events.on('modalCard:changed', (item: ICard) => {
+  const modalCardPreview = new ModalCardPreview(cloneTemplate(cardPreviewTemplate), events)
+
+
   const selectCard = cardData.getCard(item.id);
   const cardBasket = basketData.contains(item.id)
+  console.log('cardBasket: ', cardBasket);
 
   if (!cardBasket) {
     basketData.addCard(selectCard)
-    modalCardPreview.replaceTextBtn(false);
+    modalCardPreview.replaceTextBtn(true);
+    console.log("ADDCard!!!!!!!!!!!!!!!!!!!", );
   } else {
     console.log("deleteCard!!!!!!!!!!!!!!!!!!!", );
     basketData.deleteCard(item.id)
-    modalCardPreview.replaceTextBtn(true);
+    modalCardPreview.replaceTextBtn(false);
   }
 
   page.render({
     counter: basketData.getBasketLength()
   })
 
-  modal.render({
-    content: modalCardPreview.render(
-      item
-    )
-  });
+  // modal.render({
+  //   content: modalCardPreview.render(
+  //     item
+  //   )
+  // });
 
 });
 
@@ -140,12 +145,12 @@ events.on('basket:changed', () => {
   })
   console.log("Items Content:", itemsContent);
 
-  modal.render({
-    content: basketView.render({
-      items: itemsContent,
-      totalPrice: basketData.total,
-    })
-  })
+  // modal.render({
+  //   content: basketView.render({
+  //     items: itemsContent,
+  //     totalPrice: basketData.total,
+  //   })
+  // })
 
 })
 
