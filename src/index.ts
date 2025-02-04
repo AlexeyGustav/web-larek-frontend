@@ -105,7 +105,9 @@ events.on('modalCard:changed', (item: ICard) => {
     console.log("00000", );
   } 
 
-  // basketData.getBasketLength()
+  page.render({
+    counter: basketData.getBasketLength()
+  })
 
   modal.render({
     content: modalCardPreview.render(
@@ -124,7 +126,7 @@ events.on('modalCard:changed', (item: ICard) => {
 events.on('basket:changed', () => {
   const itemsContent = basketData.cards.map((card, index) => {
     console.log(`Rendering card ${index}:`, card);
-    const cardBasket = new ModalCardBasket(cloneTemplate(cardBasketTemplate), events);
+    const cardBasket = new ModalCardBasket(cloneTemplate(cardBasketTemplate), events, { onClick: () => events.emit('delete:card', card) });
     console.log('cardBasket: ', cardBasket);
     return cardBasket.render({
       id: card.id,
@@ -173,48 +175,9 @@ events.on('basket:open', () => {
   // })
 });
 
-
-
-
-
-
-// basketData.addCard(mokData[0])
-// basketData.addCard(mokData[1])
-// basketData.addCard(mokData[3])
-// console.log('getIdBasketList: ', basketData.getIdBasketList());
-
-
-
-
-
-
-
-
-// events.on('basket:open', () => {
-//   modal.render({
-//     content: basketView.render()
-//   })
-// });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-events.on('delete:card', (id: { card: string }) => {
-  // basketData.deleteCard(id.card)
-  // console.log('basketData: ', basketData);
-  // console.log("DELETE", basketData.getIdBasketList());
-
-
+// Удалить товар из корзины
+events.on('delete:card', (item: ICard) => {
+  basketData.deleteCard(item.id)
 });
 
 
@@ -229,3 +192,4 @@ events.on('modal:open', () => {
 events.on('modal:close', () => {
   page.locked = false;
 });
+

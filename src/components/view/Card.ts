@@ -167,15 +167,21 @@ export class ModalCardBasket extends Card {
   protected _basketIndex: HTMLElement;
   protected basketIndexDelete: HTMLButtonElement;
 
-  constructor(container: HTMLElement, events: IEvents) {
+  constructor(container: HTMLElement, events: IEvents, actions?: ICardActions) {
     super(container, events);
 
     this._basketIndex = this.container.querySelector(".basket__item-index");
     this.basketIndexDelete = this.container.querySelector(".basket__item-delete") as HTMLButtonElement;
 
-    this.basketIndexDelete.addEventListener('click', () => {
-      events.emit('delete:card', { card: this.cardId });
-    });
+    if (actions?.onClick) {
+      if (this.basketIndexDelete) {
+          this.basketIndexDelete.addEventListener('click', actions.onClick);
+      }  
+    };
+
+    // this.basketIndexDelete.addEventListener('click', () => {
+    //   events.emit('delete:card', { card: this.cardId });
+    // });
   }
 
   set basketIndex(index: number) {
