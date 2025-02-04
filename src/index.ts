@@ -102,8 +102,11 @@ events.on('modalCard:changed', (item: ICard) => {
   if (!cardBasket) {
     basketData.addCard(selectCard)
     modalCardPreview.replaceTextBtn(false);
-    console.log("00000", );
-  } 
+  } else {
+    console.log("deleteCard!!!!!!!!!!!!!!!!!!!", );
+    basketData.deleteCard(item.id)
+    modalCardPreview.replaceTextBtn(true);
+  }
 
   page.render({
     counter: basketData.getBasketLength()
@@ -178,6 +181,10 @@ events.on('basket:open', () => {
 // Удалить товар из корзины
 events.on('delete:card', (item: ICard) => {
   basketData.deleteCard(item.id)
+
+  page.render({
+    counter: basketData.getBasketLength()
+  })
 });
 
 

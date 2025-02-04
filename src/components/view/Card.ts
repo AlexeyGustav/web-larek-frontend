@@ -129,11 +129,7 @@ export class ModalCardPreview<T> extends Card {
     if (actions?.onClick) {
       if (this.buyBtn) {
           this.buyBtn.addEventListener('click', actions.onClick);
-        } 
-    //     else {
-    //       container.addEventListener('click', actions.onClick);
-    //       this.toggleClass(this.buyBtn, "delete")
-    // }
+        }
     }
 
   }
@@ -157,6 +153,7 @@ export class ModalCardPreview<T> extends Card {
       this.setText(this.buyBtn, "В корзину");
     } else {
       this.setText(this.buyBtn, "Удалить из корзины");
+      this.events.emit("card: delete", { card: this.cardId });
     }
 }
 
