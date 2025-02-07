@@ -6,12 +6,6 @@ export interface IOrderData {
 // TODO написать методы, когда закончу с формами
 }
 
-// export interface IOrder {
-//   email: string;
-//   phone: string;
-//   address: string;
-//   paymend: string;
-// }
 
 export type TFormErrors = {
   email?: string;

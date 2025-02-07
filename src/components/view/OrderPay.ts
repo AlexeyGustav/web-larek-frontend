@@ -69,14 +69,8 @@ export class OrderPay extends Form<IOrderPay> {
     })
   }
 
-  set paymend(value: string) {
-    
-  }
 
-  // set completed(value: boolean) {
-  //     this.toggleClass(item, "button_alt-active", value)
-  //     this.toggleClass(item, "button_alt", !value)
-  // }
+
 
   set valid(isValid: boolean) {
 		this.nextMethodButton.classList.toggle('popup__button_disabled', !isValid);

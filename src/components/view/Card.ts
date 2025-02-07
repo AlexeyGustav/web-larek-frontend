@@ -5,12 +5,9 @@ import { ICard } from "../../types/index";
 
 export interface ICardActions {
   onClick: (event: MouseEvent) => void;
-}
+};
 
 export class Card extends Component<ICard> {
-  // protected itemElement: HTMLElement;
-
-
   protected events: IEvents;
   protected _title: HTMLElement;
   protected cardId: string;
@@ -29,52 +26,34 @@ export class Card extends Component<ICard> {
     this._category = this.container.querySelector(".card__category");
     this.button = this.container.firstElementChild.querySelector(".gallery__item");
 
-
-
-
- 
-    // this.deleteBtn = this.itemElement.querySelector(".basket__item-delete");
-
-    // this.container.addEventListener("click", () => {
-    //   this.events.emit("card:select", { card: this.cardId })
-    // });
-
-
-
-    // this.deleteBtn.addEventListener("click", () => {
-    //   this.events.emit("card:delete", { card: this })
-    // });
-    
     if (actions?.onClick) {
       if (this.button) {
-          this.button.addEventListener('click', actions.onClick);
+        this.button.addEventListener('click', actions.onClick);
       } else {
-          container.addEventListener('click', actions.onClick);
-      }
-    }
-
-  }
+        container.addEventListener('click', actions.onClick);
+      };
+    };
+  };
 
   set id(id: string) {
     this.cardId = id;
-  }
+  };
 
   get id() {
     return this.cardId
-  }
+  };
 
   set title(value: string) {
     this.setText(this._title, value)
-  }
+  };
 
   set price(value: number) {
     this.setText(this._price, `${value + " синапсов"}`)
 
-    if(value === null) {
+    if (value === null) {
       this._price.textContent = "Бесценно";
-    }  
-
-  }
+    };
+  };
 
   set category(value: string) {
     this.setText(this._category, value);
@@ -100,9 +79,8 @@ export class Card extends Component<ICard> {
 
   set image(link: string) {
     this.setImage(this._image, link)
-  }
-
-}
+  };
+};
 
 // Отображение карточки в модальном окне
 export class ModalCardPreview extends Card {
@@ -120,14 +98,14 @@ export class ModalCardPreview extends Card {
       if (this.buyBtn) {
         this.buyBtn.addEventListener('click', actions.onClick);
       }
-    }
-  }
+    };
+  };
 
   set description(description: string) {
     if (this._description) {
       this.setText(this._description, description);
     }
-  }
+  };
 
   getDisabled(card: ICard) {
     if (card.price === null) {
@@ -135,17 +113,16 @@ export class ModalCardPreview extends Card {
     } else {
       this.buyBtn.disabled = false
     }
-  }
+  };
 
   replaceTextBtn(value: boolean) {
     if (value) {
       this.setText(this.buyBtn, "В корзину");
     } else {
       this.setText(this.buyBtn, "Удалить из корзины");
-    }
-}
-
-}
+    };
+  };
+};
 
 // Отображение карточки в корзине
 export class ModalCardBasket extends Card {
@@ -160,13 +137,12 @@ export class ModalCardBasket extends Card {
 
     if (actions?.onClick) {
       if (this.basketIndexDelete) {
-          this.basketIndexDelete.addEventListener('click', actions.onClick);
-      }  
+        this.basketIndexDelete.addEventListener('click', actions.onClick);
+      };
     };
-
-  }
+  };
 
   set basketIndex(index: number) {
     this.setText(this._basketIndex, index + 1);
-  }
-}
+  };
+};
