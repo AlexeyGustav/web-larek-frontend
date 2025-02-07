@@ -43,7 +43,23 @@ export class OrderPay extends Form<IOrderPay> {
 
     this.paymentMethod.forEach((item: HTMLButtonElement) => {
       item.addEventListener('click', (evt) => {
-        console.log("item", item)
+        const target = evt.target;
+        
+        // console.log("item", item.classList.add("button_alt-active"))
+        if(evt.target === this.paymentMethodCard) {
+          this.paymentMethodCard.classList.add("button_alt-active")
+        } else {
+          this.paymentMethodCard.classList.remove("button_alt-active")
+        }
+        if(evt.target === this.paymentMethodCash) {
+          this.paymentMethodCash.classList.add("button_alt-active")
+        }else {
+          this.paymentMethodCash.classList.remove("button_alt-active")
+        }
+
+
+
+
         this.events.emit('order:changed', 
           
         )
