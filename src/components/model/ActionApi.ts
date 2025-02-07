@@ -4,10 +4,6 @@ import { ICard } from '../../types/index';
 export interface ICoursesAPI {
   cdn: string;
   getLotList: () => Promise<ICard[]>;
-  // getLotItem: (id: string) => Promise<ILotItem>;
-  // getLotUpdate: (id: string) => Promise<LotUpdate>;
-  // placeBid(id: string, bid: IBid): Promise<LotUpdate>;
-  // orderLots: (order: IOrder) => Promise<IOrderResult>;
 }
 
 export class CoursesAPI extends Api implements ICoursesAPI{

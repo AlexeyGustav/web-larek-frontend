@@ -8,6 +8,7 @@
   &_alt {
     @include mixins.button(white, $primaryLight, $primaryLight);
     border: $defaultBorder;
+    opacity: .5;
     &:hover {
       border: $hoverBorder;
     }
@@ -16,5 +17,6 @@
   &_alt-active {
     @include mixins.button(white, $primaryLight, $primaryLight);
     border: $hoverBorder;
+    opacity: 1;
   }
 }

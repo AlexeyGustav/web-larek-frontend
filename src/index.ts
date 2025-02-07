@@ -14,6 +14,8 @@ import { Modal } from "./components/view/Modal";
 import { Page } from "./components/view/Page";
 import { BasketData } from "./components/model/BasketData";
 import { Basket } from "./components/view/Basket";
+import { OrderData } from "./components/model/OrderData";
+import { OrderPay } from "./components/view/OrderPay";
 
 
 import { mokData } from "./tempMokData";
@@ -41,6 +43,8 @@ const cardData = new CardData(events);
 
 const basketData = new BasketData(events);
 const basketView = new Basket(cloneTemplate(basketTemplate), events);
+
+const orderPay = new OrderPay(cloneTemplate(orderTemplate), events)
 
 
 
@@ -83,7 +87,26 @@ api.getLotList()
 
 // Открыть модальное окно с карточкой товара
 events.on('card:select', (item: ICard) => {
-  const modalCardPreview = new ModalCardPreview(cloneTemplate(cardPreviewTemplate), events, { onClick: () => events.emit('modalCard:changed', item) });
+
+  const modalCardPreview = new ModalCardPreview(cloneTemplate(cardPreviewTemplate), events, { onClick: () => {
+    const selectCard = cardData.getCard(item.id);
+    const cardBasket = basketData.contains(item.id)
+  
+    if (!cardBasket) {
+      basketData.addCard(selectCard)
+      modalCardPreview.replaceTextBtn(false);
+    } else {
+      basketData.deleteCard(item.id)
+      modalCardPreview.replaceTextBtn(true);
+    }
+  }});
+
+  const cardBasket = basketData.contains(item.id)
+  if (!cardBasket) {
+    modalCardPreview.replaceTextBtn(true);
+  } else {
+    modalCardPreview.replaceTextBtn(false);
+  }
 
   modal.render({
     content: modalCardPreview.render(
@@ -95,90 +118,37 @@ events.on('card:select', (item: ICard) => {
 
 });
 
-events.on('modalCard:changed', (item: ICard) => {
-  const modalCardPreview = new ModalCardPreview(cloneTemplate(cardPreviewTemplate), events)
-
-
-  const selectCard = cardData.getCard(item.id);
-  const cardBasket = basketData.contains(item.id)
-  console.log('cardBasket: ', cardBasket);
-
-  if (!cardBasket) {
-    basketData.addCard(selectCard)
-    modalCardPreview.replaceTextBtn(true);
-    console.log("ADDCard!!!!!!!!!!!!!!!!!!!", );
-  } else {
-    console.log("deleteCard!!!!!!!!!!!!!!!!!!!", );
-    basketData.deleteCard(item.id)
-    modalCardPreview.replaceTextBtn(false);
-  }
-
-  page.render({
-    counter: basketData.getBasketLength()
-  })
-
-  // modal.render({
-  //   content: modalCardPreview.render(
-  //     item
-  //   )
-  // });
-
-});
-
-
-
-
-
 // Корзина
 // Изменения в корзине
 events.on('basket:changed', () => {
   const itemsContent = basketData.cards.map((card, index) => {
-    console.log(`Rendering card ${index}:`, card);
     const cardBasket = new ModalCardBasket(cloneTemplate(cardBasketTemplate), events, { onClick: () => events.emit('delete:card', card) });
-    console.log('cardBasket: ', cardBasket);
+
+    cardBasket.basketIndex = index
+
     return cardBasket.render({
       id: card.id,
       title: card.title,
       price: card.price,
-      // basketIndex: index + 1,
     });
   })
-  console.log("Items Content:", itemsContent);
 
   basketView.render({
     items: itemsContent,
     totalPrice: basketData.total,
   })
 
-})
+  page.render({
+    counter: basketData.getBasketLength()
+  })
 
+})
 
 // Открыть корзину
 events.on('basket:open', () => {
   modal.render({
     content: basketView.render()
   })
-
-  // console.log("ВНИМАТЕЛЬНО", basketData);
-  // const itemsContent = basketData.cards.map((card, index) => {
-  //   console.log(`Rendering card ${index}:`, card);
-  //   const cardBasket = new ModalCardBasket(cloneTemplate(cardBasketTemplate), events);
-  //   console.log('cardBasket: ', cardBasket);
-  //   return cardBasket.render({
-  //     id: card.id,
-  //     title: card.title,
-  //     price: card.price,
-  //       // basketIndex: index + 1,
-  //   });
-  // })
-  // console.log("Items Content:", itemsContent);
-
-  // modal.render({
-  //   content: basketView.render({
-  //     items: itemsContent,
-  //     totalPrice: basketData.total,
-  //   })
-  // })
 });
 
 // Удалить товар из корзины
@@ -190,9 +160,6 @@ events.on('delete:card', (item: ICard) => {
   })
 });
 
-
-
-
 // Блокируем прокрутку страницы если открыта модалка
 events.on('modal:open', () => {
   page.locked = true;
@@ -203,3 +170,17 @@ events.on('modal:close', () => {
   page.locked = false;
 });
 
+// Оформление заказа
+const orderData = new OrderData(events)
+console.log(orderPay);
+
+events.on('order:changed', (evt) => {
+console.log("BANG!!!", evt);
+
+});
+
+events.on('order:open', () => {
+  modal.render({
+    content: orderPay.render()
+  })
+});

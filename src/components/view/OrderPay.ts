@@ -1,0 +1,107 @@
+import { Form } from "../../components/view/Form";
+import { IEvents } from "../../components/base/events";
+import {ensureElement, ensureAllElements} from "../../utils/utils";
+
+// TODO написать что мы ожидаем получить, скорее всего в сеттерах
+export interface IOrderPay {
+  // paymentMethod: HTMLButtonElement;
+  // deliveryAddress: HTMLInputElement;
+
+  valid: boolean;
+  error: string;
+}
+
+export interface IPayActions {
+  onClick: (event: MouseEvent) => void;
+}
+
+export class OrderPay extends Form<IOrderPay> {
+  protected paymentMethod: HTMLButtonElement[];
+  protected paymentMethodCard: HTMLButtonElement;
+  protected paymentMethodCash: HTMLButtonElement;
+  protected deliveryAddress: HTMLInputElement;
+  protected nextMethodButton: HTMLButtonElement;
+  protected _form: HTMLFormElement;
+
+  constructor(container: HTMLFormElement, events: IEvents, actions?: IPayActions) {
+    super(container, events);
+
+    this.paymentMethod = ensureAllElements('button[type=button]', this.container);
+    this.paymentMethodCard = ensureElement<HTMLButtonElement>("button[name=card]", this.container);
+    this.paymentMethodCash = ensureElement<HTMLButtonElement>("button[name=cash]", this.container);
+    this.deliveryAddress = ensureElement(".form__input", this.container) as HTMLInputElement;
+    this._form = this.container.querySelector('.form');
+
+    
+    this.nextMethodButton = ensureElement(".order__button", this.container) as HTMLButtonElement;
+    
+    this.nextMethodButton.addEventListener('click', (evt) => {
+			this.events.emit(`payment:submit`, {
+				// submitCallback: this.handleSubmit,
+			});
+		});
+
+    this.paymentMethod.forEach((item: HTMLButtonElement) => {
+      item.addEventListener('click', (evt) => {
+        console.log("item", item)
+        this.events.emit('order:changed', 
+          
+        )
+      });
+
+
+
+
+
+
+
+    })
+
+    // this.paymentMethodCard.addEventListener('click', (evt) => {
+    //   this.events.emit('order:changed', {
+    //     card: this.completed = true
+    //   }
+    //   );
+    // });
+
+    // this.paymentMethodCash.addEventListener('click', (evt) => {
+    //   this.events.emit('order:changed', {
+    //     cash: this.completed = true
+    //   }
+    //   );
+    // });
+
+    
+
+  
+
+  }
+
+  // set completed(value: boolean) {
+  //     this.toggleClass(item, "button_alt-active", value)
+  //     this.toggleClass(item, "button_alt", !value)
+  // }
+
+  set valid(isValid: boolean) {
+		this.nextMethodButton.classList.toggle('popup__button_disabled', !isValid);
+		this.nextMethodButton.disabled = !isValid;
+	}
+
+  set error(data: { field: string; value: string; validInformation: string }) {
+		if (data.validInformation) {
+			// this.showInputError(data.field, data.validInformation);
+		} else {
+			// this.hideInputError(data.field);
+		}
+	}
+
+
+
+  // close() {
+	// 	super.close();
+	// 	this._form.reset();
+	// 	this.inputs.forEach((element) => {
+	// 		this.hideInputError(element.name);
+	// 	});
+	// }
+}

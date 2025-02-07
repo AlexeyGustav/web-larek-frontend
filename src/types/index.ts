@@ -1,5 +1,5 @@
-// export type LotStatus = 'wait' | 'active' | 'closed';
-
+// Pick даёт возможность выбрать из большого объекта только нужные поля, а не все
+// Partial делает все поля в объекте необязательными
 
 export interface ICard {
   id: string;
@@ -22,18 +22,21 @@ export interface IBasketData {
   cards: ICard[] | ICard;
   total: number;
   addCard(card: ICard): void;
-  // deleteCard(cardId: string): void;
-  // getBasketLength(): number;
-  // getTotal(): number;
-  // getIdBasketList(): string[];
-  // contains(id: string): boolean;
-  // clear(): void;
-
+  deleteCard(cardId: string): void;
+  getBasketLength(): number;
+  getTotal(): number;
+  getIdBasketList(): CardInfo[];
+  contains(id: string): boolean;
+  clear(): void;
 }
 
+export type CardInfo = Pick<ICard & {index: number}, 'index'|'id'|'price'|'title'>;
 
-
-
+export interface IPage {
+  counter: number;
+  catalog: HTMLElement[];
+  locked: boolean;
+}
 
 
 

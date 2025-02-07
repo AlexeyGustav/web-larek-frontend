@@ -3,11 +3,11 @@ import { cloneTemplate, createElement, ensureElement } from "../../utils/utils";
 import { Component } from "../../components/base/Component";
 import { ICard } from "../../types/index";
 
-interface ICardActions {
+export interface ICardActions {
   onClick: (event: MouseEvent) => void;
 }
 
-export class Card  extends Component<ICard> {
+export class Card extends Component<ICard> {
   // protected itemElement: HTMLElement;
 
 
@@ -102,15 +102,12 @@ export class Card  extends Component<ICard> {
     this.setImage(this._image, link)
   }
 
-
-
-
 }
 
 // Отображение карточки в модальном окне
-export class ModalCardPreview<T> extends Card {
+export class ModalCardPreview extends Card {
   protected _description: HTMLElement;
-  protected buyBtn?: HTMLButtonElement;
+  protected buyBtn: HTMLButtonElement;
 
 
   constructor(container: HTMLElement, events: IEvents, actions?: ICardActions) {
@@ -118,13 +115,6 @@ export class ModalCardPreview<T> extends Card {
 
     this._description = this.container.querySelector(".card__text");
     this.buyBtn = ensureElement(".card__button", this.container) as HTMLButtonElement;
-
-    // }
-    // if (this.buyBtn) {
-    //   this.buyBtn.addEventListener("click", () => {
-    //         this.events.emit("modalCard:changed", { card: this.cardId})
-    //       });
-    // }
 
     if (actions?.onClick) {
       if (this.buyBtn) {
@@ -152,7 +142,6 @@ export class ModalCardPreview<T> extends Card {
       this.setText(this.buyBtn, "В корзину");
     } else {
       this.setText(this.buyBtn, "Удалить из корзины");
-      // this.events.emit("card: delete", { card: this.cardId });
     }
 }
 
@@ -175,13 +164,9 @@ export class ModalCardBasket extends Card {
       }  
     };
 
-    // this.basketIndexDelete.addEventListener('click', () => {
-    //   events.emit('delete:card', { card: this.cardId });
-    // });
   }
 
   set basketIndex(index: number) {
-    
-    this.setText(this._basketIndex, index+1);
+    this.setText(this._basketIndex, index + 1);
   }
 }

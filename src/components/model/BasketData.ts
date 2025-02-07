@@ -1,8 +1,5 @@
-// import { CardData, ICardsData } from '../model/CardData';
-import { ICard, IBasketData } from '../../types/index';
+import { ICard, IBasketData, CardInfo } from '../../types/index';
 import { IEvents } from "../base/events";
-
-export type CardInfo = Pick<ICard & {index: number}, 'index'|'id'|'price'|'title'>;
 
 export class BasketData implements IBasketData {
   // protected _id: string;
@@ -29,9 +26,6 @@ export class BasketData implements IBasketData {
     this._cards = this.cards.filter(card => card.id !== cardId);
     this.events.emit('basket:changed')
   }
-
-
-
 
   // Получить количество товаров
   getBasketLength(): number {
