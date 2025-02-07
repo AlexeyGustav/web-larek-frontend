@@ -7,6 +7,10 @@ export interface IOrderPay {
   // paymentMethod: HTMLButtonElement;
   // deliveryAddress: HTMLInputElement;
 
+  paymend: string;
+  adress: string;
+
+
   valid: boolean;
   error: string;
 }
@@ -41,56 +45,32 @@ export class OrderPay extends Form<IOrderPay> {
 			});
 		});
 
+
     this.paymentMethod.forEach((item: HTMLButtonElement) => {
       item.addEventListener('click', (evt) => {
-        const target = evt.target;
-        
-        // console.log("item", item.classList.add("button_alt-active"))
         if(evt.target === this.paymentMethodCard) {
           this.paymentMethodCard.classList.add("button_alt-active")
         } else {
           this.paymentMethodCard.classList.remove("button_alt-active")
         }
+
         if(evt.target === this.paymentMethodCash) {
           this.paymentMethodCash.classList.add("button_alt-active")
-        }else {
+        } else {
           this.paymentMethodCash.classList.remove("button_alt-active")
         }
 
-
-
-
         this.events.emit('order:changed', 
-          
+          { paymend: item.innerText }
         )
       });
 
 
-
-
-
-
-
     })
+  }
 
-    // this.paymentMethodCard.addEventListener('click', (evt) => {
-    //   this.events.emit('order:changed', {
-    //     card: this.completed = true
-    //   }
-    //   );
-    // });
-
-    // this.paymentMethodCash.addEventListener('click', (evt) => {
-    //   this.events.emit('order:changed', {
-    //     cash: this.completed = true
-    //   }
-    //   );
-    // });
-
+  set paymend(value: string) {
     
-
-  
-
   }
 
   // set completed(value: boolean) {
@@ -120,4 +100,11 @@ export class OrderPay extends Form<IOrderPay> {
 	// 		this.hideInputError(element.name);
 	// 	});
 	// }
+
+
+
+set adress(value: string) {
+    (this.container.elements.namedItem('email') as HTMLInputElement).value = value;
+}
+
 }

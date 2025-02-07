@@ -2,7 +2,6 @@ import { ICard, IBasketData, CardInfo } from '../../types/index';
 import { IEvents } from "../base/events";
 
 export class BasketData implements IBasketData {
-  // protected _id: string;
   protected _cards: ICard[] = [];
 
   constructor(protected events: IEvents) {}
@@ -39,18 +38,6 @@ export class BasketData implements IBasketData {
     } else {
       return this._cards.map((item) => item.price).reduce((a, b) => a + b);
     };
-  };
-
-  // Получить товар
-  getIdBasketList(): CardInfo[] {
-    return this._cards.map((card, index) => {
-      return {
-        id: card.id,
-        title: card.title,
-        price: card.price,
-        index: index + 1
-      };
-    });
   };
 
   // Проверка наличия

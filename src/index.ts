@@ -14,7 +14,8 @@ import { Modal } from "./components/view/Modal";
 import { Page } from "./components/view/Page";
 import { BasketData } from "./components/model/BasketData";
 import { Basket } from "./components/view/Basket";
-import { OrderData } from "./components/model/OrderData";
+import { OrderData, TFormErrors } from "./components/model/OrderData";
+
 import { OrderPay } from "./components/view/OrderPay";
 
 
@@ -49,8 +50,6 @@ const orderPay = new OrderPay(cloneTemplate(orderTemplate), events)
 
 
 const modal = new Modal(modalContainer, events);
-const modalCardPreview = new ModalCardPreview(cloneTemplate(cardPreviewTemplate), events); 
-
 const page = new Page(pageContainer, events)
 
 
@@ -170,15 +169,36 @@ events.on('modal:close', () => {
   page.locked = false;
 });
 
+
+
+
+
+
+
+
+
+
+
+
 // Оформление заказа
 const orderData = new OrderData(events)
-console.log(orderPay);
 
-events.on('order:changed', (evt) => {
-console.log("BANG!!!", evt);
+events.on('order:changed', (errors: Partial<TFormErrors>) => {
+  const { paymend, address, email, phone} = errors;
+  orderPay.valid = !paymend && !address && !phone && !phone;
 
+  console.log('orderData: ', orderData);
+
+  orderPay.errors = Object.values({phone, email}).filter(i => !!i).join('; ');
+})
+
+
+// Изменилось одно из полей
+events.on(/^order\..*:change/, (data: { field: keyof TFormErrors, value: string }) => {
+  orderData.setOrderField(data.field, data.value);
 });
 
+// Открыть модальное окно оплаты
 events.on('order:open', () => {
   modal.render({
     content: orderPay.render()

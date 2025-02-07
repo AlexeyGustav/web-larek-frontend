@@ -25,7 +25,6 @@ export interface IBasketData {
   deleteCard(cardId: string): void;
   getBasketLength(): number;
   getTotal(): number;
-  getIdBasketList(): CardInfo[];
   contains(id: string): boolean;
   clear(): void;
 }
