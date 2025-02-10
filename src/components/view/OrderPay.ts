@@ -4,9 +4,6 @@ import {ensureElement, ensureAllElements} from "../../utils/utils";
 
 // TODO написать что мы ожидаем получить, скорее всего в сеттерах
 export interface IOrderPay {
-  // paymentMethod: HTMLButtonElement;
-  // deliveryAddress: HTMLInputElement;
-
   paymend: string;
   adress: string;
 
@@ -23,7 +20,6 @@ export class OrderPay extends Form<IOrderPay> {
   protected paymentMethod: HTMLButtonElement[];
   protected paymentMethodCard: HTMLButtonElement;
   protected paymentMethodCash: HTMLButtonElement;
-  // protected deliveryAddress: HTMLInputElement;
   protected nextMethodButton: HTMLButtonElement;
   protected _form: HTMLFormElement;
 
@@ -33,7 +29,6 @@ export class OrderPay extends Form<IOrderPay> {
     this.paymentMethod = ensureAllElements('button[type=button]', this.container);
     this.paymentMethodCard = ensureElement<HTMLButtonElement>("button[name=card]", this.container);
     this.paymentMethodCash = ensureElement<HTMLButtonElement>("button[name=cash]", this.container);
-    // this.deliveryAddress = ensureElement(".form__input", this.container) as HTMLInputElement;
     this._form = this.container.querySelector('.form');
 
     

@@ -14,7 +14,7 @@ import { Modal } from "./components/view/Modal";
 import { Page } from "./components/view/Page";
 import { BasketData } from "./components/model/BasketData";
 import { Basket } from "./components/view/Basket";
-import { OrderData, TFormErrors } from "./components/model/OrderData";
+import { OrderData, TFormErrors, IOrderDataAll } from "./components/model/OrderData";
 
 import { OrderPay } from "./components/view/OrderPay";
 
@@ -201,11 +201,10 @@ events.on('order:changed', (errors: Partial<TFormErrors>) => {
   })
 
 });
-console.log(orderPay);
 // Изменилось одно из полей
-events.on('order:changed', (data: { field: keyof TFormErrors, value: string }) => {
-  // orderData.setOrderField(data.field, data.value);
+events.on('order:ready', (data: { field: keyof IOrderDataAll, value: string }) => {
   orderData.setOrderFirst(data.field, data.value);
+  console.log('orderData: ', orderData);
 });
 
 // Открыть модальное окно оплаты

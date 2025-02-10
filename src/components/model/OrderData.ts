@@ -2,6 +2,12 @@ import { IEvents } from "../base/events";
 
 
 
+export interface IOrderDataAll {
+  email: string;
+  phone: string;
+  address: string;
+  paymend: string;
+}
 export interface IOrderData {
   // TODO написать методы, когда закончу с формами
 
@@ -15,66 +21,53 @@ export type TFormErrors = {
   paymend?: string;
 }
 
-
-export class OrderData implements IOrderData {
-  order: {
-    email: string,
-    phone: string,
-    address: string,
-    paymend: string,
-};
-
-formErrors: TFormErrors = {};
-
-constructor(protected events: IEvents) {
-
+export type IOrder = {
+  email: "";
+  phone: "";
+  address: "";
+  paymend: "";
 }
 
-// setOrderField(field: keyof TFormErrors, value: string) {
-//   this.order[field] = value;
-//   this.events.emit('order:changed');
 
-//   if (this.validateOrder()) {
-//       this.events.emit('order:changed', this.order);
-//   }
-// }
+
+
+
+
+
+
+export class OrderData implements IOrderData {
+  protected order: IOrderDataAll = {
+    email: '',
+    phone: '',
+    address: '',
+    paymend: '',
+  };
+  formErrors: TFormErrors = {};
+
+  constructor(protected events: IEvents) {}
 
   setOrderFirst(field: keyof TFormErrors, value: string) {
     this.order[field] = value;
-    this.events.emit('order:changed');
+    this.events.emit('order:ready', this.order);
+  }
 
-    // if (this.validateOrder()) {
-    //   this.events.emit('order:changed', this.order);
+  validateOrder() {
+    const errors: typeof this.formErrors = {};
+    // if (!this.order.email) {
+    //     errors.email = 'Необходимо указать email';
     // }
-  }
-
-
-
-
-
-
-
-
-validateOrder() {
-  const errors: typeof this.formErrors = {};
-  // if (!this.order.email) {
-  //     errors.email = 'Необходимо указать email';
-  // }
-  // if (!this.order.phone) {
-  //     errors.phone = 'Необходимо указать телефон';
-  // }
-  if (!this.order.paymend) {
+    // if (!this.order.phone) {
+    //     errors.phone = 'Необходимо указать телефон';
+    // }
+    if (!this.order.paymend) {
       errors.paymend = 'Необходимо указать вид оплаты';
-  }
-  if (!this.order.address) {
+    }
+    if (!this.order.address) {
       errors.address = 'Необходимо указать адрес';
+    }
+    this.formErrors = errors;
+    this.events.emit('order:open', this.formErrors);
+    // return errors
+    return Object.keys(errors).length === 0;
   }
-  this.formErrors = errors;
-  this.events.emit('order:open', this.formErrors);
-  // return errors
-  return Object.keys(errors).length === 0;
-}
-
-
-
 }
