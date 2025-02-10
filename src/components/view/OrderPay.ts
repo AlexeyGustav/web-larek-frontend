@@ -75,13 +75,6 @@ export class OrderPay extends Form<IOrderPay> {
 		this.nextMethodButton.disabled = !isValid;
 	}
 
-  set error(data: { field: string; value: string; validInformation: string }) {
-		if (data.validInformation) {
-			// this.showInputError(data.field, data.validInformation);
-		} else {
-			// this.hideInputError(data.field);
-		}
-	}
 
 
 

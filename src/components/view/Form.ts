@@ -1,6 +1,6 @@
-import {Component} from "../base/Component";
-import {IEvents} from "../base/events";
-import {ensureElement} from "../../utils/utils";
+import { Component } from "../base/Component";
+import { IEvents } from "../base/events";
+import { ensureElement } from "../../utils/utils";
 
 interface IFormState {
     valid: boolean;
@@ -37,19 +37,22 @@ export class Form<T> extends Component<IFormState> {
         });
     }
 
+    // Валидация формы
     set valid(value: boolean) {
         this._submit.disabled = !value;
     }
 
+    // Показать ошибку
+    protected showError(errorMessage: string) {
+        this.setText(this._errors, errorMessage);
+    };
+
+    // Скрыть ошибку
+    protected hideError() {
+        this.setText(this._errors, '');
+    };
+
     set errors(value: string) {
-        this.setText(this._errors, value);
+        value ? this.showError(value) : this.hideError();
     }
-
-    // render(state: Partial<T> & IFormState) {
-    //     const {valid, errors, ...inputs} = state;
-    //     super.render({valid, errors});
-    //     Object.assign(this, inputs);
-    //     return this.container;
-
-    // }
 }

@@ -182,6 +182,13 @@ events.on('modal:close', () => {
 
 // Оформление заказа
 const orderData = new OrderData(events);
+// Изменилось одно из полей
+events.on('order:ready', (data: { field: keyof IOrderDataAll, value: string }) => {
+  orderData.setOrderFirst(data.field, data.value);
+  console.log('orderData: ', orderData);
+});
+
+
 
 events.on('order:changed', (errors: Partial<TFormErrors>) => {
   const {paymend, address} = errors;
@@ -192,7 +199,6 @@ events.on('order:changed', (errors: Partial<TFormErrors>) => {
   orderPay.valid = !paymend && !address;
 
   
-  // orderPay.errors = Object.values({phone, email}).filter(i => !!i).join('; ');
   orderPay.errors = Object.values({paymend, address}).filter(i => !!i).join('; ');
 
   orderPay.render({
@@ -201,11 +207,7 @@ events.on('order:changed', (errors: Partial<TFormErrors>) => {
   })
 
 });
-// Изменилось одно из полей
-events.on('order:ready', (data: { field: keyof IOrderDataAll, value: string }) => {
-  orderData.setOrderFirst(data.field, data.value);
-  console.log('orderData: ', orderData);
-});
+
 
 // Открыть модальное окно оплаты
 events.on('order:open', () => {
