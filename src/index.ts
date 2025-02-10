@@ -181,21 +181,26 @@ events.on('modal:close', () => {
 
 
 // Оформление заказа
-const orderData = new OrderData(events)
+const orderData = new OrderData(events);
 
 events.on('order:changed', (errors: Partial<TFormErrors>) => {
-  const { paymend, address, email, phone} = errors;
-  orderPay.valid = !paymend && !address && !phone && !phone;
+  const paymend = errors;
+  console.log('paymend: ', paymend);
+  const address = orderData.validateOrder().address;
+  console.log('address: ', address);
+  orderPay.valid = !paymend && !address;
 
-  console.log('orderData: ', orderData);
+ console.log("address", address);
 
-  orderPay.errors = Object.values({phone, email}).filter(i => !!i).join('; ');
-})
-
+  // orderPay.errors = Object.values({phone, email}).filter(i => !!i).join('; ');
+  orderPay.errors = Object.values({paymend, address}).filter(i => !!i).join('; ');
+});
 
 // Изменилось одно из полей
-events.on(/^order\..*:change/, (data: { field: keyof TFormErrors, value: string }) => {
-  orderData.setOrderField(data.field, data.value);
+events.on('order:changed', (data: { field: keyof TFormErrors, value: string }) => {
+  // orderData.setOrderField(data.field, data.value);
+  orderData.setOrderFirst(data.field, data.value);
+  console.log('orderData22: ', orderData);
 });
 
 // Открыть модальное окно оплаты

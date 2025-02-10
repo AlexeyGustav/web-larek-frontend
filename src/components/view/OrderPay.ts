@@ -60,7 +60,7 @@ export class OrderPay extends Form<IOrderPay> {
           this.paymentMethodCash.classList.remove("button_alt-active")
         }
 
-        this.events.emit('order:changed', 
+        this.events.emit('paymend:change', 
           { paymend: item.innerText }
         )
       });
@@ -102,3 +102,18 @@ set adress(value: string) {
 }
 
 }
+
+
+// export class Pay extends OrderPay {
+//   constructor(container: HTMLFormElement, events: IEvents) {
+//       super(container, events);
+//   }
+
+//   set phone(value: string) {
+//       (this.container.elements.namedItem('phone') as HTMLInputElement).value = value;
+//   }
+
+//   set email(value: string) {
+//       (this.container.elements.namedItem('email') as HTMLInputElement).value = value;
+//   }
+// }
