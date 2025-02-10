@@ -8,14 +8,12 @@ interface IFormState {
 }
 
 export class Form<T> extends Component<IFormState> {
-    protected _input: HTMLInputElement;
     protected _submit: HTMLButtonElement;
     protected _errors: HTMLElement;
 
     constructor(protected container: HTMLFormElement, protected events: IEvents) {
         super(container);
 
-        this._input = ensureElement<HTMLInputElement>('.form__input');
         this._submit = ensureElement<HTMLButtonElement>('button[type=submit]', this.container);
         this._errors = ensureElement<HTMLElement>('.form__errors', this.container);
 
@@ -33,7 +31,7 @@ export class Form<T> extends Component<IFormState> {
     }
 
     protected onInputChange(field: keyof T, value: string) {
-        this.events.emit(`${this.container.name}.${String(field)}:change`, {
+        this.events.emit(`${this.container.name}.'order:changed'`, {
             field,
             value
         });

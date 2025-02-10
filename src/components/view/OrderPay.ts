@@ -12,7 +12,7 @@ export interface IOrderPay {
 
 
   valid: boolean;
-  error: string;
+  errors: string[];
 }
 
 export interface IPayActions {
@@ -23,7 +23,7 @@ export class OrderPay extends Form<IOrderPay> {
   protected paymentMethod: HTMLButtonElement[];
   protected paymentMethodCard: HTMLButtonElement;
   protected paymentMethodCash: HTMLButtonElement;
-  protected deliveryAddress: HTMLInputElement;
+  // protected deliveryAddress: HTMLInputElement;
   protected nextMethodButton: HTMLButtonElement;
   protected _form: HTMLFormElement;
 
@@ -33,7 +33,7 @@ export class OrderPay extends Form<IOrderPay> {
     this.paymentMethod = ensureAllElements('button[type=button]', this.container);
     this.paymentMethodCard = ensureElement<HTMLButtonElement>("button[name=card]", this.container);
     this.paymentMethodCash = ensureElement<HTMLButtonElement>("button[name=cash]", this.container);
-    this.deliveryAddress = ensureElement(".form__input", this.container) as HTMLInputElement;
+    // this.deliveryAddress = ensureElement(".form__input", this.container) as HTMLInputElement;
     this._form = this.container.querySelector('.form');
 
     
@@ -61,7 +61,10 @@ export class OrderPay extends Form<IOrderPay> {
         }
 
         this.events.emit('paymend:change', 
-          { paymend: item.innerText }
+          { 
+            field: 'payment', 
+            value: item.innerText 
+          }
         )
       });
 

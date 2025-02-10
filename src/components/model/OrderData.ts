@@ -43,9 +43,9 @@ constructor(protected events: IEvents) {
     this.order[field] = value;
     this.events.emit('order:changed');
 
-    if (this.validateOrder()) {
-      this.events.emit('order:changed', this.order);
-    }
+    // if (this.validateOrder()) {
+    //   this.events.emit('order:changed', this.order);
+    // }
   }
 
 
@@ -55,7 +55,7 @@ constructor(protected events: IEvents) {
 
 
 
-validateOrder(): TFormErrors {
+validateOrder() {
   const errors: typeof this.formErrors = {};
   // if (!this.order.email) {
   //     errors.email = 'Необходимо указать email';
@@ -70,9 +70,9 @@ validateOrder(): TFormErrors {
       errors.address = 'Необходимо указать адрес';
   }
   this.formErrors = errors;
-  this.events.emit('order:changed', this.formErrors);
-  return errors
-  // return Object.keys(errors).length === 0;
+  this.events.emit('order:open', this.formErrors);
+  // return errors
+  return Object.keys(errors).length === 0;
 }
 
 

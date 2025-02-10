@@ -184,27 +184,33 @@ events.on('modal:close', () => {
 const orderData = new OrderData(events);
 
 events.on('order:changed', (errors: Partial<TFormErrors>) => {
-  const paymend = errors;
-  console.log('paymend: ', paymend);
-  const address = orderData.validateOrder().address;
-  console.log('address: ', address);
+  const {paymend, address} = errors;
+  // console.log('paymend: ', errors);
+
+  // const  = orderData.validateOrder().address;
+
   orderPay.valid = !paymend && !address;
 
- console.log("address", address);
-
+  
   // orderPay.errors = Object.values({phone, email}).filter(i => !!i).join('; ');
   orderPay.errors = Object.values({paymend, address}).filter(i => !!i).join('; ');
-});
 
+  orderPay.render({
+    valid:  orderPay.valid,
+    errors: [],
+  })
+
+});
+console.log(orderPay);
 // Изменилось одно из полей
 events.on('order:changed', (data: { field: keyof TFormErrors, value: string }) => {
   // orderData.setOrderField(data.field, data.value);
   orderData.setOrderFirst(data.field, data.value);
-  console.log('orderData22: ', orderData);
 });
 
 // Открыть модальное окно оплаты
 events.on('order:open', () => {
+
   modal.render({
     content: orderPay.render()
   })
