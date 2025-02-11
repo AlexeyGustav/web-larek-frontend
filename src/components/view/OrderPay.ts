@@ -44,10 +44,10 @@ export class OrderPay extends Form<IOrderPay> {
     });
   }
 
-  set valid(isValid: boolean) {
-    this.nextMethodButton.classList.toggle('popup__button_disabled', !isValid);
-    this.nextMethodButton.disabled = !isValid;
-  }
+  // set valid(isValid: boolean) {
+  //   this.nextMethodButton.classList.toggle('popup__button_disabled', !isValid);
+  //   this.nextMethodButton.disabled = !isValid;
+  // }
 
   set address(value: string) {
     // (this.container.elements.namedItem('address') as HTMLInputElement).value = value;

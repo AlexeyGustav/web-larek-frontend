@@ -182,6 +182,7 @@ events.on('modal:close', () => {
 
 // Оформление заказа
 const orderData = new OrderData(events);
+console.log("orderPay", orderPay);
 
 // Изменился метод оплаты
 events.on('paymend:change', ({ value }: { value: string }) => {
@@ -194,8 +195,10 @@ events.on('paymend:change', ({ value }: { value: string }) => {
   const paymend = orderData.validateOrder();
 
   orderPay.valid = !paymend && !address;
+  console.log('orderPay.valid: ', orderPay.valid);
 
   orderPay.errors = Object.values({paymend, address}).filter(i => !!i).join('; ');
+  console.log('orderPay.errors: ', orderPay.errors);
 
     orderPay.render({
       address: orderData.getOrder().address,
@@ -220,33 +223,16 @@ events.on('order:changed', (data: { field: keyof IOrderDataAll, value: string })
 
 
 
-
-
-
-// events.on('order:changed', (errors: Partial<TFormErrors>) => {
-//   const {paymend, address} = errors;
-  // console.log('paymend: ', errors);
-
-  // const  = orderData.validateOrder().address;
-
-//   orderPay.valid = !paymend && !address;
-
-  
-//   orderPay.errors = Object.values({paymend, address}).filter(i => !!i).join('; ');
-
-//   orderPay.render({
-//     valid:  orderPay.valid,
-//     errors: [],
-//   })
-
-// });
-
-
 // Открыть модальное окно оплаты
 events.on('order:open', () => {
 
   modal.render({
-    content: orderPay.render()
+    content: orderPay.render({
+      address: "",
+      paymend: "",
+      valid: false,
+      errors: [],
+  })
   })
   console.log('orderData:ready ', orderData);
 });
