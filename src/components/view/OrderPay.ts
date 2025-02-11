@@ -1,12 +1,10 @@
 import { Form } from "../../components/view/Form";
 import { IEvents } from "../../components/base/events";
-import {ensureElement, ensureAllElements} from "../../utils/utils";
+import { ensureElement, ensureAllElements } from "../../utils/utils";
 
-// TODO написать что мы ожидаем получить, скорее всего в сеттерах
 export interface IOrderPay {
   paymend: string;
   adress: string;
-
 
   valid: boolean;
   errors: string[];
@@ -31,80 +29,29 @@ export class OrderPay extends Form<IOrderPay> {
     this.paymentMethodCash = ensureElement<HTMLButtonElement>("button[name=cash]", this.container);
     this._form = this.container.querySelector('.form');
 
-    
     this.nextMethodButton = ensureElement(".order__button", this.container) as HTMLButtonElement;
-    
-    this.nextMethodButton.addEventListener('click', (evt) => {
-			this.events.emit(`payment:submit`, {
-				// submitCallback: this.handleSubmit,
-			});
-		});
-
 
     this.paymentMethod.forEach((item: HTMLButtonElement) => {
       item.addEventListener('click', (evt) => {
-        if(evt.target === this.paymentMethodCard) {
-          this.paymentMethodCard.classList.add("button_alt-active")
-        } else {
-          this.paymentMethodCard.classList.remove("button_alt-active")
-        }
+        const target = evt.target as HTMLButtonElement;
 
-        if(evt.target === this.paymentMethodCash) {
-          this.paymentMethodCash.classList.add("button_alt-active")
-        } else {
-          this.paymentMethodCash.classList.remove("button_alt-active")
-        }
+        // Обновляем состояние кнопок
+        this.paymentMethodCard.classList.toggle("button_alt-active", target === this.paymentMethodCard);
+        this.paymentMethodCash.classList.toggle("button_alt-active", target === this.paymentMethodCash);
 
-        this.events.emit('paymend:change', 
-          { 
-            field: 'payment', 
-            value: item.innerText 
-          }
-        )
+        // Эмитим событие изменения paymend
+        this.events.emit('paymend:change', { field: 'payment', value: target.innerText });
       });
-
-
-    })
+    });
   }
 
-
-
-
   set valid(isValid: boolean) {
-		this.nextMethodButton.classList.toggle('popup__button_disabled', !isValid);
-		this.nextMethodButton.disabled = !isValid;
-	}
+    this.nextMethodButton.classList.toggle('popup__button_disabled', !isValid);
+    this.nextMethodButton.disabled = !isValid;
+  }
 
-
-
-
-  // close() {
-	// 	super.close();
-	// 	this._form.reset();
-	// 	this.inputs.forEach((element) => {
-	// 		this.hideInputError(element.name);
-	// 	});
-	// }
-
-
-
-set adress(value: string) {
-    (this.container.elements.namedItem('email') as HTMLInputElement).value = value;
+  set adress(value: string) {
+    (this.container.elements.namedItem('address') as HTMLInputElement).value = value;
+    // this.events.emit('adreess:change', { value });
+  }
 }
-
-}
-
-
-// export class Pay extends OrderPay {
-//   constructor(container: HTMLFormElement, events: IEvents) {
-//       super(container, events);
-//   }
-
-//   set phone(value: string) {
-//       (this.container.elements.namedItem('phone') as HTMLInputElement).value = value;
-//   }
-
-//   set email(value: string) {
-//       (this.container.elements.namedItem('email') as HTMLInputElement).value = value;
-//   }
-// }

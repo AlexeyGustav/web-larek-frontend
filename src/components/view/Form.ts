@@ -21,19 +21,15 @@ export class Form<T> extends Component<IFormState> {
             const target = e.target as HTMLInputElement;
             const field = target.name as keyof T;
             const value = target.value;
-            this.onInputChange(field, value);
+            this.events.emit('order:changed', {
+                field,
+                value
+            });
         });
 
         this.container.addEventListener('submit', (e: Event) => {
             e.preventDefault();
             this.events.emit(`${this.container.name}:submit`);
-        });
-    }
-
-    protected onInputChange(field: keyof T, value: string) {
-        this.events.emit(`${this.container.name}.'order:changed'`, {
-            field,
-            value
         });
     }
 

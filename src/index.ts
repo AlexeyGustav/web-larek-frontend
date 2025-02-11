@@ -182,31 +182,51 @@ events.on('modal:close', () => {
 
 // Оформление заказа
 const orderData = new OrderData(events);
-// Изменилось одно из полей
-events.on('order:ready', (data: { field: keyof IOrderDataAll, value: string }) => {
-  orderData.setOrderFirst(data.field, data.value);
-  console.log('orderData: ', orderData);
+
+// Изменился метод оплаты
+events.on('paymend:change', ({ value }: { value: string }) => {
+  orderData.updatePaymentMethod(value);
+  console.log('orderData:change: ', orderData);
+  
+  // orderData.updateAddress("Sevastopol");
+  // console.log('orderData:change: ', orderData);
 });
 
 
 
-events.on('order:changed', (errors: Partial<TFormErrors>) => {
-  const {paymend, address} = errors;
+
+// Изменилось поле
+events.on('order:changed', (data: { field: keyof IOrderDataAll, value: string }) => {
+  orderData.setOrderFirst(data.field, data.value);
+  console.log('orderData:ready ', orderData);
+});
+
+
+
+
+
+
+
+
+
+
+// events.on('order:changed', (errors: Partial<TFormErrors>) => {
+//   const {paymend, address} = errors;
   // console.log('paymend: ', errors);
 
   // const  = orderData.validateOrder().address;
 
-  orderPay.valid = !paymend && !address;
+//   orderPay.valid = !paymend && !address;
 
   
-  orderPay.errors = Object.values({paymend, address}).filter(i => !!i).join('; ');
+//   orderPay.errors = Object.values({paymend, address}).filter(i => !!i).join('; ');
 
-  orderPay.render({
-    valid:  orderPay.valid,
-    errors: [],
-  })
+//   orderPay.render({
+//     valid:  orderPay.valid,
+//     errors: [],
+//   })
 
-});
+// });
 
 
 // Открыть модальное окно оплаты
