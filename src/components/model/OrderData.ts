@@ -81,7 +81,6 @@ export class OrderData implements IOrderData {
     }
     this.formErrors = errors;
     // return errors
-    this.events.emit('order:changed', this.formErrors);
     return Object.keys(errors).length === 0;
   }
 }

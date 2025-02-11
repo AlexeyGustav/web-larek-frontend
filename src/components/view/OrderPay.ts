@@ -17,7 +17,7 @@ export class OrderPay extends Form<IOrderPay> {
   protected paymentMethodCard: HTMLButtonElement;
   protected paymentMethodCash: HTMLButtonElement;
   protected nextMethodButton: HTMLButtonElement;
-  protected _form: HTMLFormElement;
+  // protected _form: HTMLFormElement;
 
   constructor(container: HTMLFormElement, events: IEvents, actions?: IPayActions) {
     super(container, events);
@@ -26,7 +26,7 @@ export class OrderPay extends Form<IOrderPay> {
     this.paymentMethod = ensureAllElements('button[type=button]', this.container);
     this.paymentMethodCard = ensureElement<HTMLButtonElement>("button[name=card]", this.container);
     this.paymentMethodCash = ensureElement<HTMLButtonElement>("button[name=cash]", this.container);
-    this._form = this.container.querySelector('.form');
+    // this._form = this.container.querySelector('.form');
 
     this.nextMethodButton = ensureElement(".order__button", this.container) as HTMLButtonElement;
 
@@ -51,6 +51,6 @@ export class OrderPay extends Form<IOrderPay> {
 
   set address(value: string) {
     // (this.container.elements.namedItem('address') as HTMLInputElement).value = value;
-    this.inputAddress.value = value;
+    // this.inputAddress.value = value;
   }
 }

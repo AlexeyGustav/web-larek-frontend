@@ -53,4 +53,12 @@ export class Form<T> extends Component<IFormState> {
     set errors(value: string) {
         value ? this.showError(value) : this.hideError();
     }
+
+    render(state: Partial<T> & IFormState) {
+        const {valid, errors, ...inputs} = state;
+        super.render({valid, errors});
+        Object.assign(this, inputs);
+        return this.container;
+
+    }
 }

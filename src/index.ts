@@ -182,23 +182,21 @@ events.on('modal:close', () => {
 
 // Оформление заказа
 const orderData = new OrderData(events);
-console.log("orderPay", orderPay);
 
 // Изменился метод оплаты
 events.on('paymend:change', ({ value }: { value: string }) => {
   orderData.updatePaymentMethod(value);
 
 
-  // const address = orderData.formErrors.address;
-  const address = orderData.validateOrder();
-  // const paymend = orderData.formErrors.paymend;
   const paymend = orderData.validateOrder();
+  const address = orderData.validateOrder();
+  // const address = orderData.formErrors.address;
+  // const paymend = orderData.formErrors.paymend;
 
   orderPay.valid = !paymend && !address;
-  console.log('orderPay.valid: ', orderPay.valid);
 
   orderPay.errors = Object.values({paymend, address}).filter(i => !!i).join('; ');
-  console.log('orderPay.errors: ', orderPay.errors);
+  console.log('orderData: ', orderData);
 
     orderPay.render({
       address: orderData.getOrder().address,
@@ -225,14 +223,19 @@ events.on('order:changed', (data: { field: keyof IOrderDataAll, value: string })
 
 // Открыть модальное окно оплаты
 events.on('order:open', () => {
+  const paymend = orderData.validateOrder();
+  const address = orderData.validateOrder();
+  orderPay.valid = !paymend && !address;
+  orderPay.errors = Object.values({paymend, address}).filter(i => !!i).join('; ');
 
   modal.render({
     content: orderPay.render({
       address: "",
       paymend: "",
-      valid: false,
-      errors: [],
+      valid: orderPay.valid,
+      errors: [orderPay.errors],
   })
   })
-  console.log('orderData:ready ', orderData);
+  console.log('orderData:order:open ', orderData);
+  console.log('orderPay order:open', orderPay);
 });
