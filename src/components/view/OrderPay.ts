@@ -3,9 +3,6 @@ import { IEvents } from "../../components/base/events";
 import { ensureElement, ensureAllElements } from "../../utils/utils";
 
 export interface IOrderPay {
-  paymend: string;
-  adress: string;
-
   valid: boolean;
   errors: string[];
 }
@@ -15,6 +12,7 @@ export interface IPayActions {
 }
 
 export class OrderPay extends Form<IOrderPay> {
+  protected inputAddress: HTMLInputElement;
   protected paymentMethod: HTMLButtonElement[];
   protected paymentMethodCard: HTMLButtonElement;
   protected paymentMethodCash: HTMLButtonElement;
@@ -24,6 +22,7 @@ export class OrderPay extends Form<IOrderPay> {
   constructor(container: HTMLFormElement, events: IEvents, actions?: IPayActions) {
     super(container, events);
 
+    this.inputAddress = this.container.querySelector('.address') as HTMLInputElement;
     this.paymentMethod = ensureAllElements('button[type=button]', this.container);
     this.paymentMethodCard = ensureElement<HTMLButtonElement>("button[name=card]", this.container);
     this.paymentMethodCash = ensureElement<HTMLButtonElement>("button[name=cash]", this.container);
@@ -50,8 +49,8 @@ export class OrderPay extends Form<IOrderPay> {
     this.nextMethodButton.disabled = !isValid;
   }
 
-  set adress(value: string) {
-    (this.container.elements.namedItem('address') as HTMLInputElement).value = value;
-    // this.events.emit('adreess:change', { value });
+  set address(value: string) {
+    // (this.container.elements.namedItem('address') as HTMLInputElement).value = value;
+    this.inputAddress.value = value;
   }
 }

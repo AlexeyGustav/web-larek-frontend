@@ -11,7 +11,7 @@ export interface IOrderDataAll {
 export interface IOrderData {
   // TODO написать методы, когда закончу с формами
   setOrderFirst(field: keyof TFormErrors, value: string): void;
-  validateOrder(): boolean;
+  // validateOrder(): boolean;
 }
 
 
@@ -45,7 +45,15 @@ export class OrderData implements IOrderData {
   };
   formErrors: TFormErrors = {};
 
-  constructor(protected events: IEvents) {}
+  constructor(protected events: IEvents) { }
+
+
+  getOrder() {
+    const order = {
+      ...this.order
+    }
+    return Object.freeze(order);
+  };
 
   setOrderFirst(field: keyof TFormErrors, value: string) {
     this.order[field] = value;
@@ -56,11 +64,6 @@ export class OrderData implements IOrderData {
     this.order.paymend = method;
     console.log('Update paymend', this.order.paymend);
   }
-
-  // updateAddress(address: string) {
-  //   this.order.address = address;
-  //   console.log('Update address', this.order.address);
-  // } 
 
   validateOrder() {
     const errors: typeof this.formErrors = {};
@@ -77,8 +80,8 @@ export class OrderData implements IOrderData {
       errors.address = 'Необходимо указать адрес';
     }
     this.formErrors = errors;
-    this.events.emit('order:open', this.formErrors);
     // return errors
+    this.events.emit('paymend:change', this.formErrors);
     return Object.keys(errors).length === 0;
   }
 }

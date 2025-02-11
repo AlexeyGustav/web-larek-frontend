@@ -3,6 +3,8 @@ import { IEvents } from "../base/events";
 import { ensureElement } from "../../utils/utils";
 
 interface IFormState {
+    address?: string;
+    paymend?: string;
     valid: boolean;
     errors: string[];
 }

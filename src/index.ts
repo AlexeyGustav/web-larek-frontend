@@ -186,10 +186,23 @@ const orderData = new OrderData(events);
 // Изменился метод оплаты
 events.on('paymend:change', ({ value }: { value: string }) => {
   orderData.updatePaymentMethod(value);
-  console.log('orderData:change: ', orderData);
-  
-  // orderData.updateAddress("Sevastopol");
-  // console.log('orderData:change: ', orderData);
+
+
+  // const address = orderData.formErrors.address;
+  const address = orderData.validateOrder();
+  // const paymend = orderData.formErrors.paymend;
+  const paymend = orderData.validateOrder();
+
+  orderPay.valid = !paymend && !address;
+
+  orderPay.errors = Object.values({paymend, address}).filter(i => !!i).join('; ');
+
+    orderPay.render({
+      address: orderData.getOrder().address,
+      paymend: orderData.getOrder().paymend,
+      valid: orderPay.valid,
+      errors: [orderPay.errors],
+  })
 });
 
 
@@ -235,4 +248,5 @@ events.on('order:open', () => {
   modal.render({
     content: orderPay.render()
   })
+  console.log('orderData:ready ', orderData);
 });
