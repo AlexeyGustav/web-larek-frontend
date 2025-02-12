@@ -26,10 +26,10 @@ export class Form<T> extends Component<IFormState> {
             this.onInputChange(field, value);
         });
 
-        this.container.addEventListener('submit', (e: Event) => {
-            e.preventDefault();
-            this.events.emit(`${this.container.name}:submit`);
-        });
+        // this.container.addEventListener('submit', (e: Event) => {
+        //     e.preventDefault();
+        //     this.events.emit(`${this.container.name}:submit`);
+        // });
     }
 
     protected onInputChange(field: keyof T, value: string) {

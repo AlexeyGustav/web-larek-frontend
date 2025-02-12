@@ -10,7 +10,7 @@ export interface IOrderDataAll {
 }
 export interface IOrderData {
   // TODO написать методы, когда закончу с формами
-  setOrderFirst(field: keyof TFormErrors, value: string): void;
+  setOrder(field: keyof TFormErrors, value: string): void;
   // validateOrder(): boolean;
 }
 
@@ -48,26 +48,24 @@ export class OrderData implements IOrderData {
   constructor(protected events: IEvents) { }
 
 
-  getOrder() {
-    const order = {
-      ...this.order
-    }
-    return Object.freeze(order);
-  };
+  // getOrder() {
+  //   const order = {
+  //     ...this.order
+  //   }
+  //   return Object.freeze(order);
+  // };
 
-  setOrderFirst(field: keyof TFormErrors, value: string) {
+  setOrder(field: keyof TFormErrors, value: string) {
     this.order[field] = value;
-    // this.events.emit('order:ready', this.order);
     if (this.validateOrder()) {
-      this.events.emit('order:ready', this.order);
+      this.events.emit('order:change', this.order);
     }
   }
 
   updatePaymentMethod(method: string) {
     this.order.paymend = method;
     if (this.validateOrder()) {
-      // this.order.paymend = method;
-      this.events.emit('order:ready', this.order);
+      this.events.emit('order:change', this.order);
     }
   }
 
@@ -87,7 +85,6 @@ export class OrderData implements IOrderData {
     }
     this.formErrors = errors;
     this.events.emit('order:changed', this.formErrors);
-    // return errors
     return Object.keys(errors).length === 0;
   }
 }

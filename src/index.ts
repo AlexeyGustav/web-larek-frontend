@@ -254,15 +254,13 @@ const contacts = new Contacts(cloneTemplate(contactsTemplate), events, { onClick
 
 events.on('order:changed', (errors: Partial<IOrderDataAll>) => {
   const {paymend, address} = errors;
-  console.log('paymend: ', errors);
-
   orderPay.valid = !paymend && !address;
-  console.log('orderPay.valid: ', orderPay.valid);
   orderPay.errors = Object.values({paymend, address}).filter(i => !!i).join(' и ');
-
-
+  
+  const {email, phone} = errors;
+  contacts.valid = !email && !phone;
+  contacts.errors = Object.values({email, phone}).filter(i => !!i).join(' и ');
 });
-
 
 // Изменился метод оплаты
 events.on('paymend:change', ({ value }: { value: string }) => {
@@ -271,12 +269,14 @@ events.on('paymend:change', ({ value }: { value: string }) => {
 
 // Изменилось поле
 events.on(/^order\..*:change/, (data: { field: keyof IOrderDataAll, value: string }) => {
-  orderData.setOrderFirst(data.field, data.value);
+  orderData.setOrder(data.field, data.value);
 
   // Сборка заказа
   const all = {
     payment: orderData.order.paymend, // Изменил 'paymend' на 'payment'
     address: orderData.order.address, // Исправил 'adress' на 'address'
+    email: orderData.order.email, 
+    phone: orderData.order.phone, 
     total: basketData.total,
     items: basketData.cards
   };
@@ -287,44 +287,27 @@ events.on(/^order\..*:change/, (data: { field: keyof IOrderDataAll, value: strin
 
 // Открыть модальное окно оплаты
 events.on('order:open', () => {
-  // const errorAddress = orderData.formErrors.address
-  // console.log('errorAddress: ', errorAddress);
-  //   const errorPaymend = orderData.formErrors
-  //   console.log('errorPaymend: ', errorPaymend);
-  // const q = Object.values({errorAddress, errorPaymend}).filter(i => !!i)
-  // console.log('q: ', q);
   modal.render({
     content: orderPay.render({
-      paymend: '',
-      adress: '',
+      paymend: orderData.order.paymend,
+      adress:  orderData.order.address,
       valid: false,
       errors: []
     }),
   })
-  console.log('!!!!!!!!!!!!', orderData);
 });
+
+
  
+events.on('order:contacts', () => {
+console.log("!!!!!!!!", orderData.formErrors);
 
-function errorsOrder(orderValue: {}){
-  Object.values(orderValue).filter(i => !!i).join(' и ');
-} 
-
-
-
-
-
-
-
-
-
-// events.on('order:contacts', () => {
-
-//   modal.render({
-//     content: contacts.render({
-//       email: '',
-//       telephone: '',
-//       valid: false,
-//       errors: ["Необходимо указать email и Необходимо указать телефон"]
-//     }),
-//   })
-// });
+  modal.render({
+    content: contacts.render({
+      email: orderData.order.email,
+      phone: orderData.order.phone,
+      valid: false,
+      errors: [],
+    }),
+  })
+});

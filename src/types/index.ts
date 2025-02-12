@@ -49,7 +49,7 @@ export interface IOrderPay extends IForm {
 
 export interface IContacts extends IForm {
   email: string;
-  telephone: string;
+  phone: string;
 }
 
 export interface IActions {

@@ -11,7 +11,7 @@ export class OrderPay extends Form<IOrderPay> {
   protected paymentMethod: HTMLButtonElement[];
   protected paymentMethodCard: HTMLButtonElement;
   protected paymentMethodCash: HTMLButtonElement;
-  protected nextMethodButton: HTMLButtonElement;
+  protected nextPage: HTMLButtonElement;
   // protected _form: HTMLFormElement;
 
   constructor(container: HTMLFormElement, events: IEvents, actions?: IActions) {
@@ -23,11 +23,11 @@ export class OrderPay extends Form<IOrderPay> {
     this.paymentMethodCash = ensureElement<HTMLButtonElement>("button[name=cash]", this.container);
     // this._form = this.container.querySelector('.form');
 
-    this.nextMethodButton = ensureElement(".order__button", this.container) as HTMLButtonElement;
+    this.nextPage = ensureElement(".order__button", this.container) as HTMLButtonElement;
 
     if (actions?.onClick) {
-      if (this.nextMethodButton) {
-        this.nextMethodButton.addEventListener('click', actions.onClick);
+      if (this.nextPage) {
+        this.nextPage.addEventListener('click', actions.onClick);
       };
     };
 
@@ -46,8 +46,8 @@ export class OrderPay extends Form<IOrderPay> {
   }
 
   set valid(isValid: boolean) {
-    this.nextMethodButton.classList.toggle('popup__button_disabled', !isValid);
-    this.nextMethodButton.disabled = !isValid;
+    this.nextPage.classList.toggle('popup__button_disabled', !isValid);
+    this.nextPage.disabled = !isValid;
   }
 
   // set address(value: string) {
