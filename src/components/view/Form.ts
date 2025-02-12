@@ -1,10 +1,10 @@
-import { Component } from "../base/Component";
-import { IEvents } from "../base/events";
-import { ensureElement } from "../../utils/utils";
+import {Component} from "../base/Component";
+import {IEvents} from "../base/events";
+import {ensureElement} from "../../utils/utils";
+
+// В классе использован код учебного проекта "Оно тебе надо"
 
 interface IFormState {
-    address?: string;
-    paymend?: string;
     valid: boolean;
     errors: string[];
 }
@@ -23,10 +23,7 @@ export class Form<T> extends Component<IFormState> {
             const target = e.target as HTMLInputElement;
             const field = target.name as keyof T;
             const value = target.value;
-            this.events.emit('order:changed', {
-                field,
-                value
-            });
+            this.onInputChange(field, value);
         });
 
         this.container.addEventListener('submit', (e: Event) => {
@@ -35,24 +32,25 @@ export class Form<T> extends Component<IFormState> {
         });
     }
 
-    // Валидация формы
-    set valid(value: boolean) {
-        this._submit.disabled = !value;
+    protected onInputChange(field: keyof T, value: string) {
+        this.events.emit(`${this.container.name}.${String(field)}:change`, {
+            field,
+            value
+        });
     }
 
-    // Показать ошибку
-    protected showError(errorMessage: string) {
-        this.setText(this._errors, errorMessage);
-    };
-
-    // Скрыть ошибку
-    protected hideError() {
-        this.setText(this._errors, '');
-    };
+    // set valid(value: boolean) {
+    //     this._submit.disabled = !value;
+    // }
 
     set errors(value: string) {
-        value ? this.showError(value) : this.hideError();
+        this.setText(this._errors, value);
     }
 
-
+    render(state: Partial<T> & IFormState) {
+        const {valid, errors, ...inputs} = state;
+        super.render({valid, errors});
+        Object.assign(this, inputs);
+        return this.container;
+    }
 }

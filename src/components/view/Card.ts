@@ -1,11 +1,11 @@
 import { IEvents } from "../../components/base/events";
-import { cloneTemplate, createElement, ensureElement } from "../../utils/utils";
+import { ensureElement } from "../../utils/utils";
 import { Component } from "../../components/base/Component";
-import { ICard } from "../../types/index";
+import { ICard, IActions } from "../../types/index";
 
-export interface ICardActions {
-  onClick: (event: MouseEvent) => void;
-};
+// export interface ICardActions {
+//   onClick: (event: MouseEvent) => void;
+// };
 
 export class Card extends Component<ICard> {
   protected events: IEvents;
@@ -16,7 +16,7 @@ export class Card extends Component<ICard> {
   protected _price: HTMLElement;
   protected _category?: HTMLElement;
 
-  constructor(container: HTMLElement, events: IEvents, actions?: ICardActions) {
+  constructor(container: HTMLElement, events: IEvents, actions?: IActions) {
     super(container);
     this.events = events;
 
@@ -88,7 +88,7 @@ export class ModalCardPreview extends Card {
   protected buyBtn: HTMLButtonElement;
 
 
-  constructor(container: HTMLElement, events: IEvents, actions?: ICardActions) {
+  constructor(container: HTMLElement, events: IEvents, actions?: IActions) {
     super(container, events)
 
     this._description = this.container.querySelector(".card__text");
@@ -129,7 +129,7 @@ export class ModalCardBasket extends Card {
   protected _basketIndex: HTMLElement;
   protected basketIndexDelete: HTMLButtonElement;
 
-  constructor(container: HTMLElement, events: IEvents, actions?: ICardActions) {
+  constructor(container: HTMLElement, events: IEvents, actions?: IActions) {
     super(container, events);
 
     this._basketIndex = this.container.querySelector(".basket__item-index");

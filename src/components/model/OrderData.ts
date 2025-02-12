@@ -37,7 +37,7 @@ export type IOrder = {
 
 
 export class OrderData implements IOrderData {
-  protected order: IOrderDataAll = {
+   order: IOrderDataAll = {
     email: '',
     phone: '',
     address: '',
@@ -57,22 +57,28 @@ export class OrderData implements IOrderData {
 
   setOrderFirst(field: keyof TFormErrors, value: string) {
     this.order[field] = value;
-    this.events.emit('order:ready', this.order);
+    // this.events.emit('order:ready', this.order);
+    if (this.validateOrder()) {
+      this.events.emit('order:ready', this.order);
+    }
   }
 
   updatePaymentMethod(method: string) {
     this.order.paymend = method;
-    console.log('Update paymend', this.order.paymend);
+    if (this.validateOrder()) {
+      // this.order.paymend = method;
+      this.events.emit('order:ready', this.order);
+    }
   }
 
   validateOrder() {
     const errors: typeof this.formErrors = {};
-    // if (!this.order.email) {
-    //     errors.email = 'Необходимо указать email';
-    // }
-    // if (!this.order.phone) {
-    //     errors.phone = 'Необходимо указать телефон';
-    // }
+    if (!this.order.email) {
+        errors.email = 'Необходимо указать email';
+    }
+    if (!this.order.phone) {
+        errors.phone = 'Необходимо указать телефон';
+    }
     if (!this.order.paymend) {
       errors.paymend = 'Необходимо указать вид оплаты';
     }
@@ -80,6 +86,7 @@ export class OrderData implements IOrderData {
       errors.address = 'Необходимо указать адрес';
     }
     this.formErrors = errors;
+    this.events.emit('order:changed', this.formErrors);
     // return errors
     return Object.keys(errors).length === 0;
   }

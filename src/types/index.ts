@@ -37,9 +37,24 @@ export interface IPage {
   locked: boolean;
 }
 
+export interface IForm {
+  valid: boolean;
+  errors: string[];
+}
 
+export interface IOrderPay extends IForm {
+  paymend: string;
+  adress: string;
+}
 
+export interface IContacts extends IForm {
+  email: string;
+  telephone: string;
+}
 
+export interface IActions {
+  onClick: (event: MouseEvent) => void;
+}
 
 
 

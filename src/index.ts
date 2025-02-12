@@ -17,6 +17,7 @@ import { Basket } from "./components/view/Basket";
 import { OrderData, TFormErrors, IOrderDataAll } from "./components/model/OrderData";
 
 import { OrderPay } from "./components/view/OrderPay";
+import { Contacts } from "./components/view/Contacts";
 
 
 import { mokData } from "./tempMokData";
@@ -29,6 +30,7 @@ const cardBasketTemplate = ensureElement<HTMLTemplateElement>('#card-basket');
 const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
 const orderTemplate = ensureElement<HTMLTemplateElement>('#order');
 const successTemplate = ensureElement<HTMLTemplateElement>('#success');
+const contactsTemplate = ensureElement<HTMLTemplateElement>('#contacts');
 const modalContainer = ensureElement<HTMLTemplateElement>('#modal-container');
 const modalContent = ensureElement<HTMLDivElement>('.modal__content');
 
@@ -45,7 +47,7 @@ const cardData = new CardData(events);
 const basketData = new BasketData(events);
 const basketView = new Basket(cloneTemplate(basketTemplate), events);
 
-const orderPay = new OrderPay(cloneTemplate(orderTemplate), events)
+const orderPay = new OrderPay(cloneTemplate(orderTemplate), events, { onClick: () => events.emit('order:contacts') })
 
 
 
@@ -180,62 +182,149 @@ events.on('modal:close', () => {
 
 
 
+// // Оформление заказа
+// const orderData = new OrderData(events);
+
+// // Изменился метод оплаты
+// events.on('paymend:change', ({ value }: { value: string }) => {
+//   orderData.updatePaymentMethod(value);
+
+
+//   // const paymend = orderData.validateOrder();
+//   // const address = orderData.validateOrder();
+
+//   // orderPay.valid = !paymend && !address;
+
+//   // const errorAddress = orderData.formErrors.address
+//   // const errorPaymend = orderData.formErrors.paymend
+
+//   // const q = Object.values({errorAddress, errorPaymend}).filter(i => !!i)
+//   // console.log('q: ', q);
+
+//   //   orderPay.render({
+//   //     address: orderData.getOrder().address,
+//   //     paymend: orderData.getOrder().paymend,
+//   //     valid: orderPay.valid,
+//   //     errors: q,
+//   // })
+// });
+
+
+
+
+// // Изменилось поле
+// events.on(/^order\..*:change/, (data: { field: keyof IOrderDataAll, value: string }) => {
+//   orderData.setOrderFirst(data.field, data.value);
+//   console.log('orderData:ready ', orderData);
+// });
+
+
+
+
+
+
+
+// // Открыть модальное окно оплаты
+// events.on('order:open', () => {
+//   // const {paymend, address} = orderData.validateOrder();
+//   // // const address = orderData.validateOrder();
+//   // orderPay.valid = !paymend && !address;
+//   // const errorAddress = orderData.formErrors.address
+//   // const errorPaymend = orderData.formErrors.paymend
+//   // // orderPay.errors = Object.values({paymend, address}).filter(i => !!i).join('; ');
+//   // // orderPay.errors = [errorAddress, errorPaymend].filter(i => !!i).join('; ');
+//   // const q = Object.values({errorAddress, errorPaymend}).filter(i => !!i)
+//   // console.log('q: ', q);
+//   modal.render({
+//     content: orderPay.render({
+//       address: "",
+//       paymend: "",
+//       valid: false,
+//       errors: q,
+//   })
+//   })
+// });
+
 // Оформление заказа
 const orderData = new OrderData(events);
+const contacts = new Contacts(cloneTemplate(contactsTemplate), events, { onClick: () => events.emit('order:total') });
+
+
+
+
+events.on('order:changed', (errors: Partial<IOrderDataAll>) => {
+  const {paymend, address} = errors;
+  console.log('paymend: ', errors);
+
+  orderPay.valid = !paymend && !address;
+  console.log('orderPay.valid: ', orderPay.valid);
+  orderPay.errors = Object.values({paymend, address}).filter(i => !!i).join(' и ');
+
+
+});
+
 
 // Изменился метод оплаты
 events.on('paymend:change', ({ value }: { value: string }) => {
   orderData.updatePaymentMethod(value);
-
-
-  const paymend = orderData.validateOrder();
-  const address = orderData.validateOrder();
-  // const address = orderData.formErrors.address;
-  // const paymend = orderData.formErrors.paymend;
-
-  orderPay.valid = !paymend && !address;
-
-  orderPay.errors = Object.values({paymend, address}).filter(i => !!i).join('; ');
-  console.log('orderData: ', orderData);
-
-    orderPay.render({
-      address: orderData.getOrder().address,
-      paymend: orderData.getOrder().paymend,
-      valid: orderPay.valid,
-      errors: [orderPay.errors],
-  })
 });
-
-
-
 
 // Изменилось поле
-events.on('order:changed', (data: { field: keyof IOrderDataAll, value: string }) => {
+events.on(/^order\..*:change/, (data: { field: keyof IOrderDataAll, value: string }) => {
   orderData.setOrderFirst(data.field, data.value);
-  console.log('orderData:ready ', orderData);
+
+  // Сборка заказа
+  const all = {
+    payment: orderData.order.paymend, // Изменил 'paymend' на 'payment'
+    address: orderData.order.address, // Исправил 'adress' на 'address'
+    total: basketData.total,
+    items: basketData.cards
+  };
+  console.log('all: ', all);
 });
-
-
-
-
 
 
 
 // Открыть модальное окно оплаты
 events.on('order:open', () => {
-  const paymend = orderData.validateOrder();
-  const address = orderData.validateOrder();
-  orderPay.valid = !paymend && !address;
-  orderPay.errors = Object.values({paymend, address}).filter(i => !!i).join('; ');
-
+  // const errorAddress = orderData.formErrors.address
+  // console.log('errorAddress: ', errorAddress);
+  //   const errorPaymend = orderData.formErrors
+  //   console.log('errorPaymend: ', errorPaymend);
+  // const q = Object.values({errorAddress, errorPaymend}).filter(i => !!i)
+  // console.log('q: ', q);
   modal.render({
     content: orderPay.render({
-      address: "",
-      paymend: "",
-      valid: orderPay.valid,
-      errors: [orderPay.errors],
+      paymend: '',
+      adress: '',
+      valid: false,
+      errors: []
+    }),
   })
-  })
-  console.log('orderData:order:open ', orderData);
-  console.log('orderPay order:open', orderPay);
+  console.log('!!!!!!!!!!!!', orderData);
 });
+ 
+
+function errorsOrder(orderValue: {}){
+  Object.values(orderValue).filter(i => !!i).join(' и ');
+} 
+
+
+
+
+
+
+
+
+
+// events.on('order:contacts', () => {
+
+//   modal.render({
+//     content: contacts.render({
+//       email: '',
+//       telephone: '',
+//       valid: false,
+//       errors: ["Необходимо указать email и Необходимо указать телефон"]
+//     }),
+//   })
+// });
