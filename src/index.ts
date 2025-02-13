@@ -1,9 +1,6 @@
 import './scss/styles.scss';
-
-
 import { CardData } from "./components/model/CardData";
-import {  ApiPostMethods, Api } from "./components/base/api";
-import { EventEmitter, IEvents } from "./components/base/events";
+import { EventEmitter } from "./components/base/events";
 import { API_URL, CDN_URL } from "./utils/constants";
 import { CoursesAPI } from "./components/model/ActionApi";
 import { Card, ModalCardPreview, ModalCardBasket } from "./components/view/Card";
@@ -33,7 +30,6 @@ const modalContainer = ensureElement<HTMLTemplateElement>('#modal-container');
 const modalContent = ensureElement<HTMLDivElement>('.modal__content');
 
 // EventImter
-// const events: IEvents = new EventEmitter();
 const events = new EventEmitter();
 
 // Контейнеры
@@ -191,17 +187,6 @@ events.on('paymend:change', ({ value }: { value: string }) => {
 // Изменилось поле
 events.on(/^order\..*:change/, (data: { field: keyof IOrderDataAll, value: string }) => {
   orderData.setOrder(data.field, data.value);
-
-  // Сборка заказа
-  const all = {
-    payment: orderData.order.paymend, // Изменил 'paymend' на 'payment'
-    address: orderData.order.address, // Исправил 'adress' на 'address'
-    email: orderData.order.email, 
-    phone: orderData.order.phone, 
-    total: basketData.total,
-    items: basketData.cards
-  };
-  console.log('all: ', all);
 });
 
 // Открыть модальное окно оплаты
@@ -232,47 +217,37 @@ events.on(/^contacts\..*:change/, (data: { field: keyof IOrderDataAll, value: st
   orderData.setOrder(data.field, data.value);
 });
 
+
 // Отправка заказа и финальное окно подтверждение заказа
-
-
-
-
 events.on('contacts:submit', () => {
+  // Сборка заказа
   const all = {
     payment: orderData.order.paymend,
     address: orderData.order.address,
     email: orderData.order.email,
     phone: orderData.order.phone,
     total: basketData.total,
-    items: basketData.cards
+    items: basketData.getListInBasket(),
   };
-
+  
   api.totalOrder(all)
     .then((result) => {
-      console.log('result: ', result);
+      const total = new Total(cloneTemplate(successTemplate), events, {
+        onClick: () => {
+          modal.close();
+          basketData.clear();
+          orderPay.form.reset();
+          contacts.form.reset();
+        }
+      });
 
+      modal.render({
+        content: total.render({
+          totalSum: basketData.total
+        })
+      })
     })
     .catch(err => {
       console.error(err);
     });
-
-
-
-
-
-  const total = new Total(cloneTemplate(successTemplate), events, {
-    onClick: () => {
-      modal.close();
-      basketData.clear();
-      // orderPay.clearOrder();
-    }
-  })
-
-
-
-  modal.render({
-    content: total.render({
-      totalSum: basketData.total
-    })
-  })
-})
+});

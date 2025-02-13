@@ -9,12 +9,10 @@ export class OrderPay extends Form<IOrderPay> {
   protected paymentMethodCard: HTMLButtonElement;
   protected paymentMethodCash: HTMLButtonElement;
   protected nextPage: HTMLButtonElement;
-  // protected form: HTMLElement;
 
   constructor(container: HTMLFormElement, events: IEvents) {
     super(container, events);
 
-    // this.form = ensureElement<HTMLElement>('form', this.container);
     this.paymentMethod = ensureAllElements('button[type=button]', this.container);
     this.paymentMethodCard = ensureElement<HTMLButtonElement>("button[name=card]", this.container);
     this.paymentMethodCash = ensureElement<HTMLButtonElement>("button[name=cash]", this.container);
@@ -30,7 +28,7 @@ export class OrderPay extends Form<IOrderPay> {
         this.paymentMethodCash.classList.toggle("button_alt-active", target === this.paymentMethodCash);
 
         // Эмитим событие изменения paymend
-        this.events.emit('paymend:change', { field: 'payment', value: target.name });
+        this.events.emit('paymend:change', { field: 'payment', value: target.innerText });
       });
     });
   };
@@ -52,7 +50,7 @@ export class OrderPay extends Form<IOrderPay> {
     (this.container.elements.namedItem('email') as HTMLInputElement).value = value;
   };
 
-  // clearOrder(form: HTMLElement) {
-  //  this.form = form.reset()
-  // }
+  get form() {
+		return this.container
+	}
 };

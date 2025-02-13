@@ -3,6 +3,7 @@
 export interface ICoursesAPI {
   cdn: string;
   getLotList: () => Promise<ICard[]>;
+  totalOrder(order: ITotalData): Promise<IOrderResult>;
 }
 
 export type ApiListResponse<Type> = {
@@ -98,7 +99,7 @@ export interface ITotalData {
   phone: string;
   address: string;
   payment: string;
-  items: ICard[];
+  items: string[];
   total: number;
 }
 

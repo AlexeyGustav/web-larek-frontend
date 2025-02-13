@@ -3,8 +3,6 @@ import {IEvents} from "../base/events";
 import {ensureElement} from "../../utils/utils";
 import {IFormState} from "../../types/index";
 
-// В классе использован код учебного проекта "Оно тебе надо"
-
 
 export class Form<T> extends Component<IFormState> {
     protected _submit: HTMLButtonElement;

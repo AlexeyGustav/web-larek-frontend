@@ -14,6 +14,11 @@ export class BasketData implements IBasketData {
     return this.getTotal();
   }
 
+  // Массив айдишников товаров
+  getListInBasket(): string[] {
+    return this._cards.map(item => item.id);
+  }
+
   // Добавить товар
   addCard(card: ICard) {
     this._cards = [card, ...this.cards]

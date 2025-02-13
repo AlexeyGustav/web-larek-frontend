@@ -12,6 +12,10 @@ export class Contacts extends Form<IContacts> {
     this.nextPage = ensureElement<HTMLButtonElement>(".button", this.container);
   }
 
+  get form() {
+		return this.container
+	}
+
   set valid(isValid: boolean) {
     this.nextPage.classList.toggle('popup__button_disabled', !isValid);
     this.nextPage.disabled = !isValid;

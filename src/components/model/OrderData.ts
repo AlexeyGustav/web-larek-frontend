@@ -45,9 +45,4 @@ export class OrderData implements IOrderData {
     this.events.emit('order:changed', this.formErrors);
     return Object.keys(errors).length === 0;
   }
-
-  clearOrder() {
-    // this.order.address = reset()
-  }
-
 }
