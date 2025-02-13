@@ -1,4 +1,4 @@
-import {ICardsContainer} from "../../types/index";
+import { ICardsContainer } from "../../types/index";
 
 export class CardsContainer {
   protected _catalog: HTMLElement[];

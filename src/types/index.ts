@@ -1,5 +1,14 @@
 // Pick даёт возможность выбрать из большого объекта только нужные поля, а не все
 // Partial делает все поля в объекте необязательными
+export interface ICoursesAPI {
+  cdn: string;
+  getLotList: () => Promise<ICard[]>;
+}
+
+export type ApiListResponse<Type> = {
+  total: number,
+  items: Type[]
+}; 
 
 export interface ICard {
   id: string;
@@ -8,6 +17,11 @@ export interface ICard {
   description?: string;
   image?: string;
   category?: string;
+}
+
+export interface ICardsData {
+  cards: ICard[];
+  getCard(cardId: string): ICard;
 }
 
 export interface IModalData {
@@ -29,7 +43,10 @@ export interface IBasketData {
   clear(): void;
 }
 
-export type CardInfo = Pick<ICard & {index: number}, 'index'|'id'|'price'|'title'>;
+export interface IBasket {
+  items: HTMLElement[];
+  totalPrice: number;
+}
 
 export interface IPage {
   counter: number;
@@ -37,17 +54,12 @@ export interface IPage {
   locked: boolean;
 }
 
-export interface IForm {
-  valid: boolean;
-  errors: string[];
-}
-
-export interface IOrderPay extends IForm {
+export interface IOrderPay  {
   paymend: string;
   adress: string;
 }
 
-export interface IContacts extends IForm {
+export interface IContacts {
   email: string;
   phone: string;
 }
@@ -56,49 +68,37 @@ export interface IActions {
   onClick: (event: MouseEvent) => void;
 }
 
+export interface IFormState {
+    valid: boolean;
+    errors: string[];
+}
 
-
-
-
-
-
-
-
-// export interface IDataCard {
-//   items: ICard[];
-//   previewCard: ICard;
-//   selectСard(item: ICard): void;
-// }
-
-// export type TCard = Pick<ICard, "id" | "price">
-
-export interface IBasketOrdered {
-  items: string[];
+export interface IOrderDataAll {
   email: string;
-  payment: string;
-  address: string;
   phone: string;
-  total: number;
-}
-
-
-
-export interface IOrder {
-  _id: string;
-  total: number;
-}
-
-export interface IForm {
   address: string;
-  telephone: string;
-  email: string;
-  payment: string;
-  total: number;
-  items: string[];
-  toCheckValidateBasket(): boolean;
-  toCheckValidateUser(): boolean;
+  paymend: string;
 }
 
-export interface IOrder extends IForm {
-  error: string;
+export type TFormErrors = {
+  email?: string;
+  phone?: string;
+  address?: string;
+  paymend?: string;
+}
+
+export interface IOrderData {
+  setOrder(field: keyof TFormErrors, value: string): void;
+  updatePaymentMethod(method: string): void;
+  validateOrder(): boolean;
+}
+
+export interface ITotalData extends IOrderDataAll {
+  cards: ICard[];
+  total: number;
+}
+
+export interface IOrderResult {
+  id: string;
+  total: number;
 }

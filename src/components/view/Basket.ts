@@ -1,12 +1,7 @@
 import { IEvents } from "../../components/base/events";
-import { ICard, IBasketData } from '../../types/index';
-import { ensureElement, cloneTemplate, formatNumber, createElement } from "../../utils/utils";
+import { IBasket } from '../../types/index';
+import { ensureElement, formatNumber, createElement } from "../../utils/utils";
 import { Component } from '../base/Component';
-
-export interface IBasket {
-  items: HTMLElement[];
-  totalPrice: number;
-}
 
 
 export class Basket extends Component<IBasket> {

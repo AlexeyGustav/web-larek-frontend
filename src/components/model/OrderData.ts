@@ -1,39 +1,5 @@
 import { IEvents } from "../base/events";
-
-
-
-export interface IOrderDataAll {
-  email: string;
-  phone: string;
-  address: string;
-  paymend: string;
-}
-export interface IOrderData {
-  // TODO написать методы, когда закончу с формами
-  setOrder(field: keyof TFormErrors, value: string): void;
-  // validateOrder(): boolean;
-}
-
-
-export type TFormErrors = {
-  email?: string;
-  phone?: string;
-  address?: string;
-  paymend?: string;
-}
-
-export type IOrder = {
-  email: "";
-  phone: "";
-  address: "";
-  paymend: "";
-}
-
-
-
-
-
-
+import { IOrderDataAll, IOrderData, TFormErrors } from "../../types/index";
 
 
 export class OrderData implements IOrderData {
@@ -46,14 +12,6 @@ export class OrderData implements IOrderData {
   formErrors: TFormErrors = {};
 
   constructor(protected events: IEvents) { }
-
-
-  // getOrder() {
-  //   const order = {
-  //     ...this.order
-  //   }
-  //   return Object.freeze(order);
-  // };
 
   setOrder(field: keyof TFormErrors, value: string) {
     this.order[field] = value;
@@ -87,4 +45,9 @@ export class OrderData implements IOrderData {
     this.events.emit('order:changed', this.formErrors);
     return Object.keys(errors).length === 0;
   }
+
+  clearOrder() {
+    // this.order.address = reset()
+  }
+
 }

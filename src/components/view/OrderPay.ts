@@ -1,35 +1,25 @@
 import { Form } from "../../components/view/Form";
 import { IEvents } from "../../components/base/events";
 import { ensureElement, ensureAllElements } from "../../utils/utils";
-import { IOrderPay, IActions } from "../../types/index";
-
-
+import { IOrderPay } from "../../types/index";
 
 
 export class OrderPay extends Form<IOrderPay> {
-  // protected inputAddress: HTMLInputElement;
   protected paymentMethod: HTMLButtonElement[];
   protected paymentMethodCard: HTMLButtonElement;
   protected paymentMethodCash: HTMLButtonElement;
   protected nextPage: HTMLButtonElement;
-  // protected _form: HTMLFormElement;
+  // protected form: HTMLElement;
 
-  constructor(container: HTMLFormElement, events: IEvents, actions?: IActions) {
+  constructor(container: HTMLFormElement, events: IEvents) {
     super(container, events);
 
-    // this.inputAddress = this.container.querySelector('.address') as HTMLInputElement;
+    // this.form = ensureElement<HTMLElement>('form', this.container);
     this.paymentMethod = ensureAllElements('button[type=button]', this.container);
     this.paymentMethodCard = ensureElement<HTMLButtonElement>("button[name=card]", this.container);
     this.paymentMethodCash = ensureElement<HTMLButtonElement>("button[name=cash]", this.container);
-    // this._form = this.container.querySelector('.form');
-
     this.nextPage = ensureElement(".order__button", this.container) as HTMLButtonElement;
 
-    if (actions?.onClick) {
-      if (this.nextPage) {
-        this.nextPage.addEventListener('click', actions.onClick);
-      };
-    };
 
     this.paymentMethod.forEach((item: HTMLButtonElement) => {
       item.addEventListener('click', (evt) => {
@@ -43,14 +33,26 @@ export class OrderPay extends Form<IOrderPay> {
         this.events.emit('paymend:change', { field: 'payment', value: target.innerText });
       });
     });
-  }
+  };
 
   set valid(isValid: boolean) {
     this.nextPage.classList.toggle('popup__button_disabled', !isValid);
     this.nextPage.disabled = !isValid;
-  }
+  };
 
-  // set address(value: string) {
-  //   (this.container.elements.namedItem('address') as HTMLInputElement).value = value;
+  set address(value: string) {
+    (this.container.elements.namedItem('address') as HTMLInputElement).value = value;
+  };
+
+  set phone(value: string) {
+    (this.container.elements.namedItem('phone') as HTMLInputElement).value = value;
+  };
+
+  set email(value: string) {
+    (this.container.elements.namedItem('email') as HTMLInputElement).value = value;
+  };
+
+  // clearOrder(form: HTMLElement) {
+  //  this.form = form.reset()
   // }
-}
+};

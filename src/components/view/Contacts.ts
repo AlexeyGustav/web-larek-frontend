@@ -1,14 +1,13 @@
 import { Form } from "../../components/view/Form";
 import { IEvents } from "../../components/base/events";
 import { ensureElement } from "../../utils/utils";
-import { IActions, IContacts } from "../../types/index";
-
+import { IContacts } from "../../types/index";
 
 
 export class Contacts extends Form<IContacts> {
   protected nextPage: HTMLButtonElement;
 
-  constructor(container: HTMLFormElement, events: IEvents, actions?: IActions) {
+  constructor(container: HTMLFormElement, events: IEvents) {
     super(container, events);
     this.nextPage = ensureElement<HTMLButtonElement>(".button", this.container);
   }

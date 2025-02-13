@@ -1,11 +1,6 @@
-import { ICard } from "../../types/index";
+import { ICard, ICardsData } from "../../types/index";
 import { IEvents } from "../base/events";
 
-// TODO: добавить интерфейс в типы и ридми
-export interface ICardsData {
-	cards: ICard[];
-  getCard(cardId: string): ICard;
-}
 
 export class CardData implements ICardsData {
   protected _cards: ICard[];

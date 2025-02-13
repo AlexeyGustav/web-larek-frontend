@@ -3,10 +3,6 @@ import { ensureElement } from "../../utils/utils";
 import { Component } from "../../components/base/Component";
 import { ICard, IActions } from "../../types/index";
 
-// export interface ICardActions {
-//   onClick: (event: MouseEvent) => void;
-// };
-
 export class Card extends Component<ICard> {
   protected events: IEvents;
   protected _title: HTMLElement;

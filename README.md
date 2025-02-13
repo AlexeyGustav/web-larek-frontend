@@ -77,12 +77,12 @@ interface ICoursesAPI {
 
 ```
 interface ICard {
-  _id: string;
+  id: string;
   title: string;
   price: number | null;
   description?: string;
-  image: string;
-  category: string;
+  image?: string;
+  category?: string;
 }
 ```
 
@@ -90,18 +90,8 @@ interface ICard {
 
 ```
 interface ICardsData {
-	cards: ICard[];
-	addCard(card: ICard): void;
-	deleteCard(cardId: string): void;
-	getCard(cardId: string): ICard;
-}
-
-
-
-interface IDataCard {
-  items: ICard[];
-  previewCard: ICard;
-  selectСard(item: ICard): void;
+  cards: ICard[];
+  getCard(cardId: string): ICard;
 }
 ```
 
@@ -109,7 +99,7 @@ interface IDataCard {
 
 ```
 interface ICardsContainer {
-  catalog: HTMLElement[];
+  catalog: HTMLElement[] | HTMLElement;
 }
 ```
 
@@ -133,9 +123,10 @@ interface IEvents {
 
 ```
 interface IModalData {
-  content: HTMLElement;
+  content: HTMLElement | HTMLElement[];
 }
 ```
+
 **Контейнер для массива карточек и модального окна**
 
 ```
@@ -144,62 +135,27 @@ interface ICardsContainer {
 }
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-**Данные карточки, которая находится в корзине**
+**Данные и методы карточки, которая находится в корзине**
 
 ```
-export type TCard = Pick<ICard, "id" | "price";
+interface IBasketData {
+  cards: ICard[] | ICard;
+  total: number;
+  addCard(card: ICard): void;
+  deleteCard(cardId: string): void;
+  getBasketLength(): number;
+  getTotal(): number;
+  contains(id: string): boolean;
+  clear(): void;
+}
 ```
-
 
 **Интерфейс для работы с корзиной**
 
 ```
 interface IBasket {
-  productsList: ICard[];
-  payment: string;
-  getSumProductsList: () => number;
-  setToSelectСard(data: ICard): void;
-  getToCounterCards: () => number;
-  delToSelectСard(item: ICard): void;
-  clearBasket(): void
-}
-```
-
-**Интерфейс для работы с заказом из корзины**
-
-```
-interface IBasketOrdered {
-  items: string[];
-  email: string;
-  payment: string;
-  address: string;
-  phone: string;
-  total: number;
+  items: HTMLElement[];
+  totalPrice: number;
 }
 ```
 
@@ -215,23 +171,61 @@ interface IOrder {
 **Ошибки**
 
 ```
-interface IOrder extends IForm {
-    error: string;
+type TFormErrors = {
+  email?: string;
+  phone?: string;
+  address?: string;
+  paymend?: string;
+}
+
+interface IFormState {
+    valid: boolean;
+    errors: string[];
 }
 ```
 
-**Интерфейс модели работы с формами**
+**Интерфейсы работы с формами**
 
 ```
-interface IForm {
-    address: string;
-    telephone: string;
-    email: string | RegExp;
-    payment: string;
-    total: number;
-    items: string[];
-    toCheckValidateBasket(): boolean;
-    toCheckValidateUser(): boolean;
+interface IOrderPay  {
+  paymend: string;
+  adress: string;
+}
+
+interface IContacts {
+  email: string;
+  phone: string;
+}
+```
+
+**Интерфейс предсавления корзины, прокрутки модального окна и контейнера**
+```
+interface IPage {
+  counter: number;
+  catalog: HTMLElement[];
+  locked: boolean;
+}
+```
+
+**Интерфейс слушателя клика**
+```
+interface IActions {
+  onClick: (event: MouseEvent) => void;
+}
+```
+**Интерфейс данных пользователя и мотодов в заказе**
+```
+interface IOrderDataAll {
+  email: string;
+  phone: string;
+  address: string;
+  paymend: string;
+}
+
+interface IOrderData {
+  setOrder(field: keyof TFormErrors, value: string): void;
+  updatePaymentMethod(method: string): void;
+  validateOrder(): boolean;
 }
 ```
 
@@ -258,11 +252,7 @@ interface IForm {
 Предназначен для для работы с DOM в дочерних компонентах
 
 **Методы**
-toggleClass() - Переключить класс
 setText() - Установить текстовое содержимое
-setDisabled() - Сменить статус блокировки
-setHidden() - Скрыть
-setVisible() - Показать
 setImage() - Установить изображение с алтернативным текстом
 render() - Рендер объекта
 
@@ -323,30 +313,17 @@ render() - Рендер объекта
 - contains - Проверка наличия товара в корзине
 - clear - Очистка корзины
 
+#### Класс OrderData
+Класс данных заказа. Принимает в поля данные о пользователе.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#### Класс OrderDetails
-Класс данных заказа
 **Поля**
-Спопсоб оплаты
-Адрес доставки
-email Телефон    
+`order` - объект данных о пользователе
+`formErrors` - объект данных об ошибках, если пользователь не введёт то или иное поле
+
+**Методы**
+- setOrder - сеттер сохраняет данные в поля о пользователе
+- updatePaymentMethod - сеттер сохраняет данные оплаты
+- validateOrder - вариант ошибки если поле не заполнено
 
 
 
@@ -439,6 +416,41 @@ email Телефон
 **Методы:**
 - basketIndex() - сеттер который принимает номер карточки товара
 
+### Класс Form
+Класс наследуется от класса Component и отвечает за валидацию и вывод ошибок.
+
+**Поля**
+`_submit: HTMLButtonElement` - кнопку отправить форму и перейти на следующее модальное окно
+`_errors: HTMLElement` - вывод ошибокесли поле не заполнено 
+
+**Методы:**
+- errors - сеттер сохраняет и выводит название ошибки
+- render - метод рендер 
+
+### Класс OrderPay
+Класс отвечает за отображение модального окна с методаом оплаты и адресом пользователя
+
+**Поля**
+`paymentMethod: HTMLButtonElement[]` - массив кнопок для метода оплаты пользователя
+`paymentMethodCard: HTMLButtonElement` - отдельная кнопка для выбора оплаты по карте
+`paymentMethodCash: HTMLButtonElement` - отдельная кнопка для выбора оплаты за наличные
+`nextPage: HTMLButtonElement` - кнопка переводящая на следующее модальное окно
+
+**Методы:**
+- valid - сеттер отвечает за disabled кнопки
+- address - сеттер отвечает за поле с адресом
+- phone - сеттер отвечает за поле с телефоном
+- email - сеттер отвечает за поле с email
+
+### Класс Contacts
+Класс отвечает за отображение модального окна с email  и телефоном пользователя
+
+**Поля**
+`nextPage: HTMLButtonElement;` -  кнопка переводящая на следующее модальное окно
+
+**Методы:**
+- valid - сеттер отвечает за disabled кнопки
+
 ### Слой коммуникации
 
 ## Взаимодействие компонентов
@@ -447,10 +459,17 @@ email Телефон
 В `index.ts` сначала создаются экземпляры всех необходимых классов, а затем настраивается обработка событий.
 
 *Список всех событий, которые могут генерироваться в системе:*\
-- `initialData:loaded` - событие генерируется когда массив карточек загружается с сервера
-
-*События изменения данных (генерируются классами моделями данных)*
-
-
-*События, возникающие при взаимодействии пользователя с интерфейсом (генерируются классами, отвечающими за представление)*
+- `events.onAll` - Слушать все события
+- `basket:changed` 
 - `card:select` - выбор карточки для отображения в модальном окне
+- `basket:changed` - Изменения в корзине
+- `delete:card` - удаление карточки товара в корзине
+- `basket:open` - открыть корзину
+- `modal:open` - открытое модальное окно
+- `modal:close` - закрытое модальное окно
+- `order:changed` - изменения в данных пользователя в заказе
+- `paymend:change` - изменения в данных о выборе оплаты
+- `order:open` - открытое модальное окно выбора оплаты и адреса пользователя
+- `order:submit` - открытое модальное окно контакты
+- `^order\..*:change` - регулярное выражение для записи изменений окна выбора оплаты \ и адреса пользователя
+- `^contacts\..*:change` - регулярное выражение для записи изменений окна email и телефона пользователя
