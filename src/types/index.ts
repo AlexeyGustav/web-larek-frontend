@@ -93,8 +93,12 @@ export interface IOrderData {
   validateOrder(): boolean;
 }
 
-export interface ITotalData extends IOrderDataAll {
-  cards: ICard[];
+export interface ITotalData {
+  email: string;
+  phone: string;
+  address: string;
+  payment: string;
+  items: ICard[];
   total: number;
 }
 

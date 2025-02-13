@@ -230,17 +230,7 @@ events.on('order:submit', () => {
 
 events.on(/^contacts\..*:change/, (data: { field: keyof IOrderDataAll, value: string }) => {
   orderData.setOrder(data.field, data.value);
-
-  // Сборка заказа
-  const all = {
-    payment: orderData.order.paymend, 
-    address: orderData.order.address, 
-    email: orderData.order.email, 
-    phone: orderData.order.phone, 
-    total: basketData.total,
-    items: basketData.cards
-  };
-  console.log('all: ', all);});
+});
 
 // Отправка заказа и финальное окно подтверждение заказа
 
@@ -249,12 +239,12 @@ events.on(/^contacts\..*:change/, (data: { field: keyof IOrderDataAll, value: st
 
 events.on('contacts:submit', () => {
   const all = {
-    paymend: orderData.order.paymend,
+    payment: orderData.order.paymend,
     address: orderData.order.address,
     email: orderData.order.email,
     phone: orderData.order.phone,
     total: basketData.total,
-    cards: basketData.cards
+    items: basketData.cards
   };
 
   api.totalOrder(all)

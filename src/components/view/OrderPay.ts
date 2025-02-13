@@ -30,7 +30,7 @@ export class OrderPay extends Form<IOrderPay> {
         this.paymentMethodCash.classList.toggle("button_alt-active", target === this.paymentMethodCash);
 
         // Эмитим событие изменения paymend
-        this.events.emit('paymend:change', { field: 'payment', value: target.innerText });
+        this.events.emit('paymend:change', { field: 'payment', value: target.name });
       });
     });
   };
