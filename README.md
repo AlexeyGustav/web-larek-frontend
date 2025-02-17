@@ -70,7 +70,7 @@ type TApiPostMethods = 'POST' | 'PUT' | 'DELETE'
 interface ICoursesAPI {
   cdn: string;
   getLotList: () => Promise<ICard[]>;
-  totalOrder(order: ITotalData): Promise<IOrderResult>;
+  postTotalOrder(order: ITotalData): Promise<IOrderResult>;
 }
 ```
 
@@ -180,7 +180,7 @@ type TFormErrors = {
 }
 
 interface IFormState {
-    valid: boolean;
+    disabled: boolean;
     errors: string[];
 }
 ```
@@ -303,7 +303,7 @@ render() - Рендер объекта
 
 **Методы**
 - getLotList - гет запрос, возвращает массив данных карточек
-- totalOrder- пост запрос, отправляет объект заказа на сервер 
+- postTotalOrder - пост запрос, отправляет объект заказа на сервер 
 
 #### Класс CardData
 Принимает в модель данные от сервера. Ещё принимает событие EventEmitter
@@ -345,6 +345,7 @@ render() - Рендер объекта
 - setOrder - сеттер сохраняет данные в поля о пользователе
 - updatePaymentMethod - сеттер сохраняет данные оплаты
 - validateOrder - вариант ошибки если поле не заполнено
+- clear - Очистка данных пользователя
 
 
 ### Слой представления данных **VIEW**
@@ -453,10 +454,11 @@ render() - Рендер объекта
 `nextPage: HTMLButtonElement` - кнопка переводящая на следующее модальное окно
 
 **Методы:**
-- valid - сеттер отвечает за disabled кнопки
+- disabled - сеттер отвечает за disabled кнопки
 - address - сеттер отвечает за поле с адресом
 - phone - сеттер отвечает за поле с телефоном
 - email - сеттер отвечает за поле с email
+- resetPaymentMethod - обнуляет выбор оплаты
 
 ### Класс Contacts
 Класс отвечает за отображение модального окна с email  и телефоном пользователя
@@ -465,7 +467,7 @@ render() - Рендер объекта
 `nextPage: HTMLButtonElement` -  кнопка переводящая на следующее модальное окно
 
 **Методы:**
-- valid - сеттер отвечает за disabled кнопки
+- disabled - сеттер отвечает за disabled кнопки
 
 ### Класс Total
 Класс обозначает успешную отправку данных заказа на сервер и отвечает за финальное окно успеха с суммой зааза, наследуется от класса Component. Принимает контейнер для темплейта и слушатель события

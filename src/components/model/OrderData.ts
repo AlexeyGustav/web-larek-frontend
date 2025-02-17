@@ -45,4 +45,15 @@ export class OrderData implements IOrderData {
     this.events.emit('order:changed', this.formErrors);
     return Object.keys(errors).length === 0;
   }
+
+  // Отчистка данных пользователя
+  clear(): void {
+    this.order = {
+      email: '',
+      phone: '',
+      address: '',
+      paymend: '',
+    };
+    this.events.emit('order:change', this.order);
+  };
 }

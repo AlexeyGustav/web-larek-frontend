@@ -39,8 +39,8 @@ export class Form<T> extends Component<IFormState> {
     }
 
     render(state: Partial<T> & IFormState) {
-        const {valid, errors, ...inputs} = state;
-        super.render({valid, errors});
+        const {disabled, errors, ...inputs} = state;
+        super.render({disabled, errors});
         Object.assign(this, inputs);
         return this.container;
     }

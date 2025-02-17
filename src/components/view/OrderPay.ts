@@ -30,10 +30,11 @@ export class OrderPay extends Form<IOrderPay> {
         // Эмитим событие изменения paymend
         this.events.emit('paymend:change', { field: 'payment', value: target.innerText });
       });
+
     });
   };
 
-  set valid(isValid: boolean) {
+  set disabled(isValid: boolean) {
     this.nextPage.classList.toggle('popup__button_disabled', !isValid);
     this.nextPage.disabled = !isValid;
   };
@@ -53,4 +54,9 @@ export class OrderPay extends Form<IOrderPay> {
   get form() {
 		return this.container
 	}
+
+  resetPaymentMethod() {   
+      this.paymentMethodCard.classList.remove("button_alt-active");
+      this.paymentMethodCash.classList.remove("button_alt-active");
+  }
 };

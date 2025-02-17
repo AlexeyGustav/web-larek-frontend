@@ -86,7 +86,6 @@ events.on('card:select', (item: ICard) => {
 
   const modalCardPreview = new ModalCardPreview(cloneTemplate(cardPreviewTemplate), events, { onClick: () => {
     const selectCard = cardData.getCard(item.id);
-    const cardBasket = basketData.contains(item.id)
   
     if (!cardBasket) {
       basketData.addCard(selectCard)
@@ -151,9 +150,6 @@ events.on('basket:open', () => {
 events.on('delete:card', (item: ICard) => {
   basketData.deleteCard(item.id)
 
-  page.render({
-    counter: basketData.getBasketLength()
-  })
 });
 
 // Блокируем прокрутку страницы если открыта модалка
@@ -170,12 +166,13 @@ events.on('modal:close', () => {
 // Оформление заказа
 
 events.on('order:changed', (errors: Partial<IOrderDataAll>) => {
+
   const {paymend, address} = errors;
-  orderPay.valid = !paymend && !address;
+  orderPay.disabled = !paymend && !address;
   orderPay.errors = Object.values({paymend, address}).filter(i => !!i).join(' и ');
   
   const {email, phone} = errors;
-  contacts.valid = !email && !phone;
+  contacts.disabled = !email && !phone;
   contacts.errors = Object.values({email, phone}).filter(i => !!i).join(' и ');
 });
 
@@ -195,7 +192,7 @@ events.on('order:open', () => {
     content: orderPay.render({
       paymend: orderData.order.paymend,
       adress:  orderData.order.address,
-      valid: false,
+      disabled: false,
       errors: []
     }),
   })
@@ -207,7 +204,7 @@ events.on('order:submit', () => {
     content: contacts.render({
       email: orderData.order.email,
       phone: orderData.order.phone,
-      valid: false,
+      disabled: false,
       errors: [],
     }),
   })
@@ -229,23 +226,27 @@ events.on('contacts:submit', () => {
     total: basketData.total,
     items: basketData.getListInBasket(),
   };
-  
-  api.totalOrder(all)
-    .then((result) => {
-      const total = new Total(cloneTemplate(successTemplate), events, {
-        onClick: () => {
-          modal.close();
-          basketData.clear();
-          orderPay.form.reset();
-          contacts.form.reset();
-        }
-      });
 
-      modal.render({
-        content: total.render({
-          totalSum: basketData.total
-        })
-      })
+  const total = new Total(cloneTemplate(successTemplate), events, {
+    onClick: () => {
+      modal.close();
+    }
+  });
+
+  modal.render({
+    content: total.render({
+      totalSum: basketData.total
+    })
+  })
+
+  api.postTotalOrder(all)
+
+    .then((result) => {
+      basketData.clear();
+      orderData.clear();
+      orderPay.form.reset();
+      contacts.form.reset();
+      orderPay.resetPaymentMethod();
     })
     .catch(err => {
       console.error(err);

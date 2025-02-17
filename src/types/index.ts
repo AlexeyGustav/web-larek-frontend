@@ -3,7 +3,7 @@
 export interface ICoursesAPI {
   cdn: string;
   getLotList: () => Promise<ICard[]>;
-  totalOrder(order: ITotalData): Promise<IOrderResult>;
+  postTotalOrder(order: ITotalData): Promise<IOrderResult>;
 }
 
 export type ApiListResponse<Type> = {
@@ -70,8 +70,8 @@ export interface IActions {
 }
 
 export interface IFormState {
-    valid: boolean;
-    errors: string[];
+  disabled: boolean;
+  errors: string[];
 }
 
 export interface IOrderDataAll {

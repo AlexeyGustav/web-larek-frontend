@@ -19,7 +19,7 @@ export class CoursesAPI extends Api implements ICoursesAPI {
     );
   }
 
-  totalOrder(order: ITotalData): Promise<IOrderResult> {
+  postTotalOrder(order: ITotalData): Promise<IOrderResult> {
     return this.post('/order', order).then(
       (data) => data as IOrderResult
     );

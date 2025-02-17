@@ -21,14 +21,14 @@ export class BasketData implements IBasketData {
 
   // Добавить товар
   addCard(card: ICard) {
-    this._cards = [card, ...this.cards]
-    this.events.emit('basket:changed')
+    this._cards.push(card);
+    this.events.emit('basket:changed');
   }
 
   // Удалить товар
   deleteCard(cardId: string) {
     this._cards = this.cards.filter(card => card.id !== cardId);
-    this.events.emit('basket:changed')
+    this.events.emit('basket:changed');
   }
 
   // Получить количество товаров
@@ -50,7 +50,7 @@ export class BasketData implements IBasketData {
     return this._cards.some(item => item.id === id);
   };
 
-  // Очистка корзины
+  // Отчистка корзины
   clear(): void {
     this._cards = [];
     this.events.emit('basket:changed');

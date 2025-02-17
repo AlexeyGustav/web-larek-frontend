@@ -16,7 +16,7 @@ export class Contacts extends Form<IContacts> {
 		return this.container
 	}
 
-  set valid(isValid: boolean) {
+  set disabled(isValid: boolean) {
     this.nextPage.classList.toggle('popup__button_disabled', !isValid);
     this.nextPage.disabled = !isValid;
   }
