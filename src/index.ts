@@ -227,21 +227,22 @@ events.on('contacts:submit', () => {
     items: basketData.getListInBasket(),
   };
 
-  const total = new Total(cloneTemplate(successTemplate), events, {
-    onClick: () => {
-      modal.close();
-    }
-  });
-
-  modal.render({
-    content: total.render({
-      totalSum: basketData.total
-    })
-  })
-
+  
   api.postTotalOrder(all)
-
-    .then((result) => {
+  
+  .then((result) => {
+      const total = new Total(cloneTemplate(successTemplate), events, {
+        onClick: () => {
+          modal.close();
+        }
+      });
+    
+      modal.render({
+        content: total.render({
+          totalSum: basketData.total
+        })
+      })
+      // Отчистка корзины и данных пользователя
       basketData.clear();
       orderData.clear();
       orderPay.form.reset();
