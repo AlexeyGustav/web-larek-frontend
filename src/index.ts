@@ -86,7 +86,9 @@ events.on('card:select', (item: ICard) => {
 
   const modalCardPreview = new ModalCardPreview(cloneTemplate(cardPreviewTemplate), events, { onClick: () => {
     const selectCard = cardData.getCard(item.id);
+    const cardBasket = basketData.contains(item.id)
   
+    console.log('cardBasket: ', cardBasket);
     if (!cardBasket) {
       basketData.addCard(selectCard)
       modalCardPreview.replaceTextBtn(false);
